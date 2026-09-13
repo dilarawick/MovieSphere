@@ -1,0 +1,58 @@
+import { MOVIES } from './movies.js';
+export const MORE_A = [
+  {
+    id: 6, title: 'Top Gun: Maverick', year: 2022, imdb: 8.2, duration: '2h 11m',
+    maturity: 'PG-13', quality: '4K', genres: ['Action','Drama'],
+    overview: 'Maverick leads TOP GUN graduates on an impossible mission.',
+    cast: ['Tom Cruise','Miles Teller'], director: 'Joseph Kosinski',
+    poster: 'https://image.tmdb.org/t/p/w500/62HCnUTziyWcpDaBO2i1DX17ljH.jpg',
+    backdrop: 'https://image.tmdb.org/t/p/original/odJ4hx6g6vBt4lBWKFD1tI8WS4x.jpg',
+    trending: false, featured: false,
+  },
+  {
+    id: 7, title: 'The Batman', year: 2022, imdb: 7.8, duration: '2h 56m',
+    maturity: 'PG-13', quality: '4K', genres: ['Crime','Thriller','Action'],
+    overview: 'Batman uncovers corruption in Gotham while pursuing the Riddler.',
+    cast: ['Robert Pattinson','Zoe Kravitz'], director: 'Matt Reeves',
+    poster: 'https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg',
+    backdrop: 'https://image.tmdb.org/t/p/original/b0PlSFdDwbyK0cf5RxwDpaOJQvQ.jpg',
+    trending: false, featured: false,
+  },
+  {
+    id: 8, title: 'Across the Spider-Verse', year: 2023, imdb: 8.6, duration: '2h 20m',
+    maturity: 'PG', quality: '4K', genres: ['Animation','Action','Adventure'],
+    overview: 'Miles Morales catapults across the Multiverse with Spider-People.',
+    cast: ['Shameik Moore','Hailee Steinfeld'], director: 'Joaquim Dos Santos',
+    poster: 'https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg',
+    backdrop: 'https://image.tmdb.org/t/p/original/4HodYYKEIsGOdinkGi2Ucz6X9i0.jpg',
+    trending: true, featured: false,
+  },
+  {
+    id: 9, title: 'Avatar: The Way of Water', year: 2022, imdb: 7.6, duration: '3h 12m',
+    maturity: 'PG-13', quality: '4K', genres: ['Sci-Fi','Adventure','Action'],
+    overview: 'Jake Sully and Neytiri fight to protect their family on Pandora.',
+    cast: ['Sam Worthington','Zoe Saldana'], director: 'James Cameron',
+    poster: 'https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg',
+    backdrop: 'https://image.tmdb.org/t/p/original/s16H6tpK2utvwDtzZ8Qy4qm5Emw.jpg',
+    trending: false, featured: false,
+  },
+  {
+    id: 10, title: 'Guardians of the Galaxy Vol. 3', year: 2023, imdb: 7.9, duration: '2h 30m',
+    maturity: 'PG-13', quality: '4K', genres: ['Sci-Fi','Adventure','Comedy'],
+    overview: 'Peter Quill rallies his team to defend the universe.',
+    cast: ['Chris Pratt','Zoe Saldana'], director: 'James Gunn',
+    poster: 'https://image.tmdb.org/t/p/w500/r2J02Z2OpNTctfOSN1Ydgii51I3.jpg',
+    backdrop: 'https://image.tmdb.org/t/p/original/5YZbUmjbMa3ClvSW1Wj3D6XGolb.jpg',
+    trending: false, featured: false,
+  },
+  {
+    id: 11, title: 'Furiosa: A Mad Max Saga', year: 2024, imdb: 7.5, duration: '2h 28m',
+    maturity: 'R', quality: 'HD', genres: ['Action','Adventure','Sci-Fi'],
+    overview: 'Young Furiosa plots a path home through the Wasteland.',
+    cast: ['Anya Taylor-Joy','Chris Hemsworth'], director: 'George Miller',
+    poster: 'https://image.tmdb.org/t/p/w500/iADOJ8Zymht2JPMoy3R7xceZprc.jpg',
+    backdrop: 'https://image.tmdb.org/t/p/original/wNAhuOZ3Zf84jCIlrcI6JhgmYkv.jpg',
+    trending: false, featured: false,
+  },
+];
+MORE_A.forEach((m) => MOVIES.push(m));

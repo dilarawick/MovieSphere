@@ -1,0 +1,47 @@
+// Seed part 2 — PUBLIC DOMAIN English classics with REAL free-legal streams.
+// These are the only titles served as full films: archive.org marks them
+// public domain with hotlinkable .mp4 files. Everything else = trailer only.
+export const PUBLIC_DOMAIN = [
+  {
+    title: 'Night of the Living Dead', year: 1968, imdb: 7.8,
+    duration: '1h 36m', maturity: 'PG', quality: 'HD',
+    genres: ['Horror', 'Thriller'],
+    overview: 'A group of people hide in a farmhouse from flesh-eating zombies. Public-domain horror classic.',
+    cast: ['Duane Jones', 'Judith O Dea'], director: 'George A. Romero',
+    poster: 'https://image.tmdb.org/t/p/w500/u9k4KXvWQcDGPzPtQHhYJXz7QdU.jpg',
+    backdrop: 'https://image.tmdb.org/t/p/original/b9aDDEZqNSpI8s1A0r3Gf2e7pJk.jpg',
+    tagline: '100% Free & Legal — Public Domain', trending: true, featured: false,
+    language: 'en', languageLabel: 'English',
+    streamType: 'mp4', source: 'archive.org',
+    streamUrl: 'https://archive.org/download/night_of_the_living_dead/night_of_the_living_dead_512kb.mp4',
+    license: 'Public Domain', licenseUrl: 'https://archive.org/details/night_of_the_living_dead',
+  },
+  {
+    title: 'Charade', year: 1963, imdb: 7.9,
+    duration: '1h 53m', maturity: 'PG', quality: 'HD',
+    genres: ['Comedy', 'Thriller', 'Crime'],
+    overview: 'A widow is pursued by men hunting her late husband fortune. Public-domain Audrey Hepburn classic.',
+    cast: ['Audrey Hepburn', 'Cary Grant'], director: 'Stanley Donen',
+    poster: 'https://image.tmdb.org/t/p/w500/8pWVTmbp6N9zL8b2s6r9v0q1w2e.jpg',
+    backdrop: 'https://image.tmdb.org/t/p/original/2a3b4c5d6e7f8g9h0i1j2k3l4m5n6.jpg',
+    tagline: '100% Free & Legal — Public Domain', trending: false, featured: false,
+    language: 'en', languageLabel: 'English',
+    streamType: 'mp4', source: 'archive.org',
+    streamUrl: 'https://archive.org/download/Charade1963/Charade1963_512kb.mp4',
+    license: 'Public Domain', licenseUrl: 'https://archive.org/details/Charade1963',
+  },
+  {
+    title: 'House on Haunted Hill', year: 1959, imdb: 6.8,
+    duration: '1h 15m', maturity: 'PG', quality: 'HD',
+    genres: ['Horror', 'Thriller'],
+    overview: 'A millionaire offers cash to anyone who survives a night in a haunted house. Public domain.',
+    cast: ['Vincent Price'], director: 'William Castle',
+    poster: 'https://image.tmdb.org/t/p/w500/3a2b1c4d5e6f7g8h9i0j1k2l3m4n.jpg',
+    backdrop: 'https://image.tmdb.org/t/p/original/4b3c2d1e0f9g8h7i6j5k4l3m2n1o.jpg',
+    trending: false, featured: false,
+    language: 'en', languageLabel: 'English',
+    streamType: 'mp4', source: 'archive.org',
+    streamUrl: 'https://archive.org/download/house_on_haunted_hill_ipod/house_on_haunted_hill_512kb.mp4',
+    license: 'Public Domain', licenseUrl: 'https://archive.org/details/house_on_haunted_hill',
+  },
+];

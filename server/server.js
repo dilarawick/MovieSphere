@@ -57,7 +57,7 @@ app.get('/api/health', (req, res) =>
   res.json({ ok: true, time: new Date().toISOString() })
 );
 
-app.get('/', (req, res) =>
+app.get('/api', (req, res) =>
   res.json({
     name: 'MovieSphere API',
     stack: 'React -> Node.js + Express -> MongoDB -> Movie API -> legal video sources',
@@ -79,13 +79,16 @@ app.use('/api/movies', movieRoutes);
 // On Render you can build the frontend and run this same server, so one
 // URL serves both API + site (no CORS setup needed).
 const distDir = path.join(__dirname, '..', 'dist');
-if (fs.existsSync(distDir)) {
+const hasDist = fs.existsSync(path.join(distDir, 'index.html'));
+if (hasDist) {
   app.use(express.static(distDir));
   // SPA fallback — but never swallow /api routes.
   app.get(/^(?!\/api).*/, (req, res) => {
     res.sendFile(path.join(distDir, 'index.html'));
   });
   console.log('[static] Serving frontend from ../dist');
+} else {
+  console.warn('[static] ../dist/index.html NOT FOUND — API-only mode. Build must run `npm run build` from repo root.');
 }
 
 async function boot() {

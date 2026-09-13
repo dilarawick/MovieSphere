@@ -1,4 +1,4 @@
-import { X, Play, Plus, Check, Star, BadgeCheck } from 'lucide-react';
+import { X, Play, Plus, Check, Star, BadgeCheck, ExternalLink, Loader2 } from 'lucide-react';
 import { ImdbBadge, Meta } from './bits.jsx';
 
 export function LicenseChip({ m }) {
@@ -48,23 +48,76 @@ export function DetailModal({ m, onClose, onPlay, inList, onToggle }) {
 export function PlayerModal({ m, onClose }) {
   if (!m) return null;
   const free = m.streamType === 'mp4' || m.streamType === 'hls';
+  const hasEmbed = !!m.streamUrl;
+  const trailer = m.trailer || null;
+  const provider = m.provider || null;
+  const watchUrl = trailer?.watchUrl || m.streamUrlFallback || null;
+  const hasProv = provider && ((provider.flatrate || []).length || (provider.rent || []).length || (provider.buy || []).length);
+  const embedSrc = hasEmbed
+    ? (m.streamUrl.includes('autoplay') ? m.streamUrl : `${m.streamUrl}${m.streamUrl.includes('?') ? '&' : '?'}autoplay=1&rel=0`)
+    : null;
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/95" onClick={onClose} />
-      <div className="relative w-full max-w-5xl animate-fadeUp">
+      <div className="relative w-full max-w-5xl animate-fadeUp max-h-[92vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-3 gap-3">
           <p className="font-bold text-lg">Now Playing: <span className="text-red-500">{m.title}</span></p>
           <button onClick={onClose} className="p-2 rounded-full bg-white/10 hover:bg-red-600 shrink-0"><X size={18} /></button>
         </div>
         <div className="mb-3"><LicenseChip m={m} /></div>
-        <div className="aspect-video rounded-2xl overflow-hidden border border-white/15 bg-black">
-          {free ? (
+        <div className="aspect-video rounded-2xl overflow-hidden border border-white/15 bg-black grid place-items-center">
+          {m._loading ? (
+            <div className="flex flex-col items-center gap-3 text-gray-300">
+              <Loader2 className="animate-spin" size={32} />
+              <p className="text-sm">Fetching trailer &amp; watch options…</p>
+            </div>
+          ) : free && hasEmbed ? (
             <video className="h-full w-full" src={m.streamUrl} controls autoPlay playsInline />
+          ) : embedSrc ? (
+            <iframe key={embedSrc} className="h-full w-full" src={embedSrc} title={`${m.title} trailer`} allow="accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen />
           ) : (
-            <iframe className="h-full w-full" src={m.streamUrl} title={m.title} allow="autoplay; encrypted-media; fullscreen" allowFullScreen />
+            <div className="text-center px-8 py-10">
+              <p className="font-bold text-lg mb-2">Trailer blocked for embedding</p>
+              <p className="text-sm text-gray-400 mb-5">The owner disabled inline playback. Open it on YouTube instead.</p>
+              {watchUrl && (<a href={watchUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 px-6 py-2.5 rounded-lg font-bold"><ExternalLink size={16} /> Watch Trailer on YouTube</a>)}
+            </div>
           )}
         </div>
-        <p className="mt-3 text-xs text-gray-500">{free ? ('Full film streamed free and legally from ' + (m.source || 'archive.org')) : 'Trailer / licensed embed only — under-copyright titles cannot be streamed free in full.'}</p>
+        {!m._loading && !free && watchUrl && embedSrc && (
+          <p className="mt-2 text-xs text-gray-400">Can&apos;t see it? <a href={watchUrl} target="_blank" rel="noreferrer" className="text-red-400 underline underline-offset-2">Open on YouTube</a></p>
+        )}
+        {!m._loading && !free && (
+          <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+            <p className="font-bold text-sm">Watch full film legally {provider?.region ? <span className="text-gray-400">({provider.region})</span> : null}</p>
+            {hasProv ? (
+              <div className="space-y-2.5 mt-2">
+                {(provider.flatrate?.length > 0) && (<ProviderRow label="Stream" items={provider.flatrate} />)}
+                {(provider.rent?.length > 0) && (<ProviderRow label="Rent" items={provider.rent} />)}
+                {(provider.buy?.length > 0) && (<ProviderRow label="Buy" items={provider.buy} />)}
+                {provider.link && (<a href={provider.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-xs text-sky-300 underline underline-offset-2">All options on TMDB <ExternalLink size={12} /></a>)}
+              </div>
+            ) : (
+              <p className="text-xs text-gray-400 mt-1">No streaming offers in this region. {m.tmdbUrl && (<a href={m.tmdbUrl} target="_blank" rel="noreferrer" className="text-sky-300 underline underline-offset-2">Check TMDB</a>)}</p>
+            )}
+          </div>
+        )}
+        <p className="mt-3 text-xs text-gray-500">{m.notice || (free ? ('Full film from ' + (m.source || 'archive.org')) : 'Trailer only.')}</p>
+      </div>
+    </div>
+  );
+}
+
+function ProviderRow({ label, items }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400 w-14 shrink-0">{label}</span>
+      <div className="flex flex-wrap gap-2">
+        {items.map((p) => (
+          <span key={p.name} className="inline-flex items-center gap-1.5 text-xs bg-black/40 border border-white/15 rounded-full pl-1 pr-3 py-1">
+            {p.logo ? <img src={p.logo} alt={p.name} className="w-5 h-5 rounded-full" /> : <Star size={12} className="text-yellow-400 ml-1" />}
+            {p.name}
+          </span>
+        ))}
       </div>
     </div>
   );

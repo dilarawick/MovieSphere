@@ -44,9 +44,17 @@ export default function App() {
 
   const inList = (m) => watchlist.some((x) => x.id === m.id);
   const toggle = (m) => setWatchlist((w) => (inList(m) ? w.filter((x) => x.id !== m.id) : [...w, m]));
-  const play = (m) => {
-    if (m.streamUrl) { setDetail(null); setPlayer(m); return; }
-    api.stream(m.id).then((s) => { setDetail(null); setPlayer({ ...m, ...s }); }).catch(() => { setDetail(null); setPlayer(m); });
+  const play = async (m) => {
+    // Always resolve via /stream so TMDB trailers + provider links load fresh.
+    // Show the player instantly in loading state, then swap in real URLs.
+    setDetail(null);
+    setPlayer({ ...m, _loading: true });
+    try {
+      const s = await api.stream(m.id);
+      setPlayer({ ...m, ...s, _loading: false });
+    } catch {
+      setPlayer({ ...m, _loading: false });
+    }
   };
   const featured = useMemo(() => movies.filter((m) => m.featured), [movies]);
   const trending = useMemo(() => movies.filter((m) => m.trending), [movies]);

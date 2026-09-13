@@ -16,7 +16,10 @@ async function allMovies() {
 }
 
 let _dbCount = -1;
-function dbHasMovies() { return _dbCount !== 0; }
+// -1 = unknown (startup race — use seeds until boot finishes, never DB)
+//  0 = known-empty -> use in-memory seeds
+// >0 = use Mongo
+function dbHasMovies() { return _dbCount > 0; }
 
 router.get('/health', (req, res) => res.json({ ok: true }));
 

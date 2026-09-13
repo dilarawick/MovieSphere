@@ -5,7 +5,7 @@ import Hero from './components/Hero.jsx';
 import Row from './components/Row.jsx';
 import { MovieCard } from './components/Row.jsx';
 import { DetailModal, PlayerModal, ListDrawer } from './components/Modals.jsx';
-import { api } from './lib/api.js';
+import { api, API_BASE } from './lib/api.js';
 
 const FALLBACK_GENRES = ['All','Action','Sci-Fi','Adventure','Drama','Thriller','Crime','Comedy','Animation','Horror','History'];
 
@@ -22,14 +22,15 @@ export default function App() {
   const [player, setPlayer] = useState(null);
   const [listOpen, setListOpen] = useState(false);
   const [watchlist, setWatchlist] = useState([]);
+  const [apiError, setApiError] = useState(false);
 
   useEffect(() => {
     let alive = true;
     Promise.all([api.trending().catch(() => []), api.freeLegal().catch(() => []), api.genres().catch(() => FALLBACK_GENRES)])
       .then(() => setApiOnline(true)).catch(() => setApiOnline(false));
     api.movies({ lang: 'all', sort: 'latest', limit: 100 })
-      .then((d) => { if (alive) { setMovies(d); setApiOnline(true); } })
-      .catch(() => { if (alive) setApiOnline(false); });
+      .then((d) => { if (alive) { setMovies(d); setApiOnline(true); setApiError(false); } })
+      .catch(() => { if (alive) { setApiOnline(false); setApiError(true); } });
     api.freeLegal().then((d) => { if (alive) setFreeFilms(d); }).catch(() => {});
     api.genres().then((g) => { if (alive && g.length) setGenres(g); }).catch(() => {});
     return () => { alive = false; };
@@ -110,8 +111,10 @@ export default function App() {
               <button key={g} onClick={() => setGenre(g)} className={genre === g ? 'shrink-0 px-4 py-2 rounded-full text-sm font-semibold bg-red-600' : 'shrink-0 px-4 py-2 rounded-full text-sm font-semibold bg-white/5 border border-white/15 hover:bg-white/15'}>{g}</button>
             ))}
           </div>
-          {movies.length === 0 ? (
-            <div className="py-14 text-center text-gray-400"><SearchX className="mx-auto mb-3" size={32} /><p>No movies found — is the API on :5000?</p></div>
+          {apiError ? (
+            <div className="py-14 text-center text-gray-400"><SearchX className="mx-auto mb-3" size={32} /><p>Couldn&apos;t reach the API{API_BASE ? ` at ${API_BASE}` : ''}.</p><p className="mt-1 text-xs">Check Railway Variables → VITE_API_URL, then redeploy.</p></div>
+          ) : movies.length === 0 ? (
+            <div className="py-14 text-center text-gray-400"><SearchX className="mx-auto mb-3" size={32} /><p>No movies for this filter — try “All”.</p></div>
           ) : (
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-6 justify-items-center">
               {movies.map((m) => (<MovieCard key={m.id} m={m} onMore={setDetail} onPlay={play} inList={inList(m)} onToggle={toggle} />))}

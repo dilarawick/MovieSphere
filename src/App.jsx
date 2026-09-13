@@ -23,14 +23,15 @@ export default function App() {
   const [listOpen, setListOpen] = useState(false);
   const [watchlist, setWatchlist] = useState([]);
   const [apiError, setApiError] = useState(false);
+  const [apiErrorMsg, setApiErrorMsg] = useState('');
 
   useEffect(() => {
     let alive = true;
     Promise.all([api.trending().catch(() => []), api.freeLegal().catch(() => []), api.genres().catch(() => FALLBACK_GENRES)])
       .then(() => setApiOnline(true)).catch(() => setApiOnline(false));
     api.movies({ lang: 'all', sort: 'latest', limit: 100 })
-      .then((d) => { if (alive) { setMovies(d); setApiOnline(true); setApiError(false); } })
-      .catch(() => { if (alive) { setApiOnline(false); setApiError(true); } });
+      .then((d) => { if (alive) { setMovies(d); setApiOnline(true); setApiError(false); setApiErrorMsg(''); } })
+      .catch((e) => { if (alive) { setApiOnline(false); setApiError(true); setApiErrorMsg(String(e.message || e)); } });
     api.freeLegal().then((d) => { if (alive) setFreeFilms(d); }).catch(() => {});
     api.genres().then((g) => { if (alive && g.length) setGenres(g); }).catch(() => {});
     return () => { alive = false; };
@@ -112,7 +113,12 @@ export default function App() {
             ))}
           </div>
           {apiError ? (
-            <div className="py-14 text-center text-gray-400"><SearchX className="mx-auto mb-3" size={32} /><p>Couldn&apos;t reach the API{API_BASE ? ` at ${API_BASE}` : ''}.</p><p className="mt-1 text-xs">Check Railway Variables → VITE_API_URL, then redeploy.</p></div>
+            <div className="py-14 text-center text-gray-400">
+              <SearchX className="mx-auto mb-3" size={32} />
+              <p>Couldn&apos;t reach the API{API_BASE ? ` at ${API_BASE}` : ' (same origin)'}.</p>
+              <p className="mt-2 text-xs font-mono text-red-300/80 break-all px-4">{apiErrorMsg}</p>
+              <p className="mt-2 text-xs">If it says NON-JSON with &lt;!doctype — frontend and API are on different services. Set VITE_API_URL to the backend URL and redeploy.</p>
+            </div>
           ) : movies.length === 0 ? (
             <div className="py-14 text-center text-gray-400"><SearchX className="mx-auto mb-3" size={32} /><p>No movies for this filter — try “All”.</p></div>
           ) : (

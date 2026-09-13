@@ -1,7 +1,8 @@
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const BASE = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '');
 
 async function get(path) {
-  const res = await fetch(`${BASE}${path}`);
+  const url = BASE ? `${BASE}${path}` : path;
+  const res = await fetch(url);
   if (!res.ok) throw new Error(`API ${res.status}: ${path}`);
   return res.json();
 }

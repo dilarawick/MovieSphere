@@ -1,6 +1,6 @@
 import express from 'express';
 import { Movie } from '../models/Movie.js';
-import { toClientMovie, fetchTmdb } from '../services/movieService.js';
+import { toClientMovie, fetchTmdb, getTmdbTrailer, getTmdbProviders } from '../services/movieService.js';
 import { ENGLISH } from '../data/seedEnglish.js';
 import { ENGLISH_MORE } from '../data/seedEnglishMore.js';
 import { PUBLIC_DOMAIN } from '../data/seedPublicDomain.js';
@@ -73,23 +73,74 @@ router.get('/:id', async (req, res) => {
 });
 
 // GET /api/movies/:id/stream — legal playback descriptor
+// Full films (mp4/hls) stream directly. Everything else resolves the best
+// legal option in this order:
+//   1. Stored trailerYouTubeKey / streamUrl (seed)
+//   2. Live TMDB /movie/{id}/videos trailer via TMDB_API_KEY
+//   3. JustWatch watch-providers (rent/buy/subscription) via TMDB
+//   4. YouTube search fallback (user clicks through to a real page)
 router.get('/:id/stream', async (req, res) => {
   const list = await allMovies();
   const found = list.find((m) => String(m._id || m.id) === req.params.id || String(m.tmdbId) === req.params.id);
   if (!found) return res.status(404).json({ error: 'Movie not found' });
   const c = toClientMovie(found);
+  const isFullFilm = ['mp4', 'hls'].includes(c.streamType);
+  if (isFullFilm) {
+    return res.json({
+      title: c.title,
+      year: c.year,
+      streamType: c.streamType,
+      streamUrl: c.streamUrl,
+      source: c.source,
+      license: c.license,
+      licenseUrl: c.licenseUrl,
+      fullFilmFree: true,
+      provider: null,
+      tmdbUrl: c.tmdbId ? `https://www.themoviedb.org/movie/${c.tmdbId}` : null,
+      trailer: null,
+      notice: 'Full film — public-domain or rights-holder licensed. Free & legal.',
+    });
+  }
+
+  // Trailer-only title: start with stored values, then enrich live via TMDB.
+  let trailerKey = c.trailerYouTubeKey || null;
+  let trailerEmbed = c.streamType === 'youtube' && c.streamUrl ? c.streamUrl : null;
+  let trailerWatch = trailerKey ? `https://www.youtube.com/watch?v=${trailerKey}` : null;
+  let providers = null;
+
+  if (c.tmdbId) {
+    const [trailer, prov] = await Promise.all([
+      trailerKey ? null : getTmdbTrailer(c.tmdbId).catch(() => null),
+      getTmdbProviders(c.tmdbId, req.query.region || 'US').catch(() => null),
+    ]);
+    if (trailer) {
+      trailerKey = trailer.key;
+      trailerEmbed = trailer.embedUrl;
+      trailerWatch = trailer.url;
+    }
+    providers = prov;
+  }
+
+  // Final fallback: a YouTube search page that always loads.
+  const q = encodeURIComponent(`${c.title} ${c.year || ''} official trailer`.trim());
+  const searchUrl = `https://www.youtube.com/results?search_query=${q}`;
+
   res.json({
     title: c.title,
-    streamType: c.streamType,
-    streamUrl: c.streamUrl,
-    source: c.source,
+    year: c.year,
+    streamType: trailerEmbed ? 'youtube' : 'youtube-search',
+    streamUrl: trailerEmbed || null,
+    streamUrlFallback: searchUrl,
+    source: 'youtube-legal',
     license: c.license,
     licenseUrl: c.licenseUrl,
-    fullFilmFree: ['mp4', 'hls'].includes(c.streamType),
-    notice:
-      c.streamType === 'mp4' || c.streamType === 'hls'
-        ? 'Full film — public-domain or rights-holder licensed. Free & legal.'
-        : 'Trailer / licensed embed only — this title is under copyright and cannot be streamed free in full.',
+    fullFilmFree: false,
+    provider: providers,
+    tmdbUrl: c.tmdbId ? `https://www.themoviedb.org/movie/${c.tmdbId}` : null,
+    trailer: trailerKey
+      ? { key: trailerKey, embedUrl: trailerEmbed, watchUrl: trailerWatch }
+      : { key: null, embedUrl: null, watchUrl: searchUrl },
+    notice: 'Trailer plays in-app. Full film is under copyright — use the provider links below to watch legally.',
   });
 });
 

@@ -1,0 +1,22 @@
+services:
+  # Single-service deploy: one URL serves API + React site.
+  # Uses in-memory seed catalogue if MONGO_URI is empty.
+  - type: web
+    name: moviesphere
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build && npm --prefix server install
+    startCommand: npm --prefix server start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: TMDB_API_KEY
+        sync: false
+      - key: TMDB_BASE
+        value: https://api.themoviedb.org/3
+      - key: MONGO_URI
+        sync: false
+      - key: CLIENT_URL
+        sync: false

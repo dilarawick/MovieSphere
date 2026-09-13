@@ -17,19 +17,35 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// CORS: allow one or many comma-separated client URLs + Vercel previews
-const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+// CORS: single-service deploy = same origin, no CORS needed.
+// If CLIENT_URL is unset/empty, allow all origins (public read-only API).
+// If set, allow that list + Vercel previews + Railway domains.
+const rawClientUrl = (process.env.CLIENT_URL || '').trim();
+const allowedOrigins = rawClientUrl
   .split(',')
   .map((s) => s.trim())
   .filter(Boolean);
+function isAllowedOrigin(origin) {
+  if (!origin) return true; // curl / server-to-server / same-origin GET
+  if (allowedOrigins.length === 0) return true;
+  if (allowedOrigins.includes('*')) return true;
+  if (allowedOrigins.includes(origin)) return true;
+  try {
+    const host = new URL(origin).hostname || '';
+    if (host.endsWith('.vercel.app')) return true;
+    if (host.endsWith('.up.railway.app') || host.endsWith('.railway.app')) return true;
+    // Same-origin check is covered by allowedOrigins, but also allow
+    // Railway-provided domains automatically.
+    if (process.env.RAILWAY_PUBLIC_DOMAIN && origin.includes(process.env.RAILWAY_PUBLIC_DOMAIN)) return true;
+  } catch {
+    return false;
+  }
+  return false;
+}
 app.use(
   cors({
     origin: (origin, cb) => {
-      // Allow server-to-server / curl (no Origin header) and any allowed origin.
-      // Also allow *.vercel.app previews so preview deploys just work.
-      if (!origin) return cb(null, true);
-      if (allowedOrigins.includes(origin)) return cb(null, true);
-      if (/\.vercel\.app$/.test(new URL(origin).hostname || '')) return cb(null, true);
+      if (isAllowedOrigin(origin)) return cb(null, true);
       return cb(null, false);
     },
   })

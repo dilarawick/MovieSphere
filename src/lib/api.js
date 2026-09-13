@@ -2,8 +2,21 @@ const BASE = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '');
 
 async function get(path) {
   const url = BASE ? `${BASE}${path}` : path;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`API ${res.status}: ${path}`);
+  let res;
+  try {
+    res = await fetch(url);
+  } catch (e) {
+    throw new Error(`NETWORK ${url}: ${e.message}`);
+  }
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`API ${res.status} ${url} :: ${body.slice(0, 200)}`);
+  }
+  const ct = res.headers.get('content-type') || '';
+  if (!ct.includes('application/json')) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`NON-JSON ${res.status} ${url} :: ${body.slice(0, 200)}`);
+  }
   return res.json();
 }
 

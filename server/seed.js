@@ -14,6 +14,10 @@ import { BULK_COMEDY } from './data/seedBulkComedy.js';
 import { BULK_FAMILY } from './data/seedBulkFamily.js';
 import { BULK_THRILLER } from './data/seedBulkThriller.js';
 import { BULK_2026 } from './data/seedBulkExtra.js';
+import { REAL2026_A } from './data/seed2026real1.js';
+import { REAL2026_B } from './data/seed2026real2.js';
+import { REAL2026_C } from './data/seed2026real3.js';
+import { REAL2026_D } from './data/seed2026real4.js';
 
 function tag(list, fallback) {
   return list.filter((m) => !m.skip).map((m) => ({ mediaType: m.mediaType || fallback, ...m }));
@@ -40,6 +44,10 @@ const all = dedupe([
   ...tag(BULK_FAMILY, 'movie'),
   ...tag(BULK_THRILLER, 'movie'),
   ...tag(BULK_2026, 'movie'),
+  ...tag(REAL2026_A, 'movie'),
+  ...tag(REAL2026_B, 'movie'),
+  ...tag(REAL2026_C, 'movie'),
+  ...tag(REAL2026_D, 'movie'),
   ...tag(LATEST_TV, 'tv'),
 ]);
 

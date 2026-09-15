@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Flame, Trophy, LayoutGrid, SearchX, Clapperboard, WifiOff, BadgeCheck, Sparkles, Tv } from 'lucide-react';
+import { Flame, Trophy, LayoutGrid, SearchX, Clapperboard, WifiOff, BadgeCheck, Sparkles, Tv, Ghost, Laugh, Zap } from 'lucide-react';
 import Navbar from './components/Navbar.jsx';
 import Hero from './components/Hero.jsx';
 import Row from './components/Row.jsx';
@@ -30,7 +30,7 @@ export default function App() {
     let alive = true;
     Promise.all([api.trending().catch(() => []), api.freeLegal().catch(() => []), api.genres().catch(() => FALLBACK_GENRES)])
       .then(() => setApiOnline(true)).catch(() => setApiOnline(false));
-    api.movies({ lang: 'all', sort: 'latest', limit: 100 })
+    api.movies({ lang: 'all', sort: 'latest', limit: 200 })
       .then((d) => { if (alive) { setMovies(d); setApiOnline(true); setApiError(false); setApiErrorMsg(''); } })
       .catch((e) => { if (alive) { setApiOnline(false); setApiError(true); setApiErrorMsg(String(e.message || e)); } });
     api.freeLegal().then((d) => { if (alive) setFreeFilms(d); }).catch(() => {});
@@ -40,7 +40,7 @@ export default function App() {
 
   useEffect(() => {
     const t = setTimeout(() => {
-      api.movies({ lang, type: mediaType, q: query, genre, sort, limit: 100 }).then(setMovies).catch(() => {});
+      api.movies({ lang, type: mediaType, q: query, genre, sort, limit: 200 }).then(setMovies).catch(() => {});
     }, 300);
     return () => clearTimeout(t);
   }, [lang, mediaType, query, genre, sort]);
@@ -64,6 +64,9 @@ export default function App() {
   const justMovies = useMemo(() => movies.filter((m) => (m.mediaType || 'movie') === 'movie'), [movies]);
   const tvShows = useMemo(() => movies.filter((m) => (m.mediaType || 'movie') === 'tv'), [movies]);
   const latest = useMemo(() => movies.filter((m) => (m.year || 0) >= 2024).sort((a, b) => (b.year || 0) - (a.year || 0)), [movies]);
+  const horror = useMemo(() => movies.filter((m) => (m.genres || []).includes('Horror')), [movies]);
+  const comedyFam = useMemo(() => movies.filter((m) => (m.genres || []).some((g) => ['Comedy', 'Family', 'Animation'].includes(g))), [movies]);
+  const thriller = useMemo(() => movies.filter((m) => (m.genres || []).some((g) => ['Thriller', 'Crime', 'Action'].includes(g))), [movies]);
   const english = useMemo(() => movies.filter((m) => (m.language || 'en') === 'en' && (m.mediaType || 'movie') === 'movie'), [movies]);
   const sinhala = useMemo(() => movies.filter((m) => m.language === 'si'), [movies]);
   const topRated = useMemo(() => [...movies].sort((a, b) => (b.imdb || 0) - (a.imdb || 0)).slice(0, 10), [movies]);
@@ -77,14 +80,26 @@ export default function App() {
       )}
       <Hero movies={featured.length ? featured : movies.slice(0, 5)} onMore={setDetail} onPlay={play} />
       <main className="max-w-7xl mx-auto px-6 md:px-10 -mt-10 relative z-30 space-y-12 pb-16">
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5">
           {[{ k: 'all', l: 'All Languages' }, { k: 'en', l: 'English' }, { k: 'si', l: 'Sinhala' }].map((t) => (
-            <button key={t.k} onClick={() => setLang(t.k)} className={lang === t.k ? 'px-4 py-2 rounded-full text-sm font-bold bg-red-600' : 'px-4 py-2 rounded-full text-sm font-semibold bg-white/5 border border-white/15'}>{t.l}</button>
+            <button key={t.k} onClick={() => setLang(t.k)} className={lang === t.k ? 'btn-chip bg-red-600 font-bold shadow-lg shadow-red-900/40' : 'btn-chip bg-white/5 border border-white/15 hover:bg-white/15'}>{t.l}</button>
           ))}
           <span className="mx-1 h-6 w-px bg-white/15" />
           {[{ k: 'all', l: 'Movies + TV' }, { k: 'movie', l: 'Movies' }, { k: 'tv', l: 'TV Shows' }].map((t) => (
-            <button key={t.k} onClick={() => setMediaType(t.k)} className={mediaType === t.k ? 'px-4 py-2 rounded-full text-sm font-bold bg-sky-600' : 'px-4 py-2 rounded-full text-sm font-semibold bg-white/5 border border-white/15'}>{t.l}</button>
+            <button key={t.k} onClick={() => setMediaType(t.k)} className={mediaType === t.k ? 'btn-chip bg-sky-600 font-bold shadow-lg shadow-sky-900/40' : 'btn-chip bg-white/5 border border-white/15 hover:bg-white/15'}>{t.l}</button>
           ))}
+        </div>
+        <div>
+          <div className="flex items-center gap-2 mb-3 text-emerald-400 font-bold uppercase tracking-widest text-sm"><Ghost size={17} /> Horror Night</div>
+          <Row title="Horror Movies" sub="Including The End of Oak Street + 2024 hits" movies={horror} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
+        </div>
+        <div>
+          <div className="flex items-center gap-2 mb-3 text-yellow-300 font-bold uppercase tracking-widest text-sm"><Laugh size={17} /> Comedy & Family</div>
+          <Row title="Laugh + Family Night" sub="Comedies, animation & feel-good picks" movies={comedyFam} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
+        </div>
+        <div>
+          <div className="flex items-center gap-2 mb-3 text-orange-400 font-bold uppercase tracking-widest text-sm"><Zap size={17} /> Thriller & Action</div>
+          <Row title="Thrillers" sub="Edge-of-seat suspense" movies={thriller} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
         </div>
         {freeFilms.length > 0 && (
           <div>
@@ -116,16 +131,16 @@ export default function App() {
         </div>
         <div id="browse" className="rounded-3xl border border-white/10 bg-panel/60 p-5 md:p-7">
           <div className="flex flex-wrap items-center gap-3 justify-between">
-            <h2 className="text-xl font-extrabold flex items-center gap-2"><LayoutGrid className="text-red-500" size={22} /> Browse by Genre</h2>
-            <select value={sort} onChange={(e) => setSort(e.target.value)} className="bg-black/50 border border-white/15 rounded-full text-sm px-4 py-2 outline-none">
+            <h2 className="text-2xl font-extrabold flex items-center gap-2"><LayoutGrid className="text-red-500" size={26} /> Browse by Genre</h2>
+            <select value={sort} onChange={(e) => setSort(e.target.value)} className="bg-black/50 border border-white/15 rounded-full text-base px-5 py-3 outline-none min-h-[48px]">
               <option value="latest">Sort: Latest</option>
               <option value="imdb">Sort: IMDb High-Low</option>
               <option value="az">Sort: A-Z</option>
             </select>
           </div>
-          <div className="mt-4 flex gap-2 overflow-x-auto no-scrollbar pb-1">
+          <div className="mt-4 flex gap-2.5 overflow-x-auto no-scrollbar pb-1">
             {genres.map((g) => (
-              <button key={g} onClick={() => setGenre(g)} className={genre === g ? 'shrink-0 px-4 py-2 rounded-full text-sm font-semibold bg-red-600' : 'shrink-0 px-4 py-2 rounded-full text-sm font-semibold bg-white/5 border border-white/15 hover:bg-white/15'}>{g}</button>
+              <button key={g} onClick={() => setGenre(g)} className={genre === g ? 'shrink-0 btn-chip bg-red-600 font-bold shadow-lg shadow-red-900/40' : 'shrink-0 btn-chip bg-white/5 border border-white/15 hover:bg-white/15'}>{g}</button>
             ))}
           </div>
           {apiError ? (
@@ -136,7 +151,7 @@ export default function App() {
               <p className="mt-2 text-xs">If it says NON-JSON with &lt;!doctype — frontend and API are on different services. Set VITE_API_URL to the backend URL and redeploy.</p>
             </div>
           ) : movies.length === 0 ? (
-            <div className="py-14 text-center text-gray-400"><SearchX className="mx-auto mb-3" size={32} /><p>No titles for this filter — try “All”.</p></div>
+            <div className="py-14 text-center text-gray-300"><SearchX className="mx-auto mb-3" size={36} /><p className="text-lg">No titles for this filter — try “All”.</p></div>
           ) : (
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-6 justify-items-center">
               {movies.map((m) => (<MovieCard key={m.id} m={m} onMore={setDetail} onPlay={play} inList={inList(m)} onToggle={toggle} />))}

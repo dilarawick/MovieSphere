@@ -1,5 +1,12 @@
-import { X, Play, Plus, Check, Star, BadgeCheck, ExternalLink, Loader2 } from 'lucide-react';
+import { X, Play, Plus, Check, Star, BadgeCheck, ExternalLink, Loader2, Tv, Clapperboard } from 'lucide-react';
 import { ImdbBadge, Meta } from './bits.jsx';
+
+export function MediaBadge({ type }) {
+  if (type === 'tv') {
+    return <span className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded bg-sky-500/90 text-white"><Tv size={11} /> TV</span>;
+  }
+  return <span className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded bg-violet-600/90 text-white"><Clapperboard size={11} /> MOVIE</span>;
+}
 
 export function LicenseChip({ m }) {
   const free = m.streamType === 'mp4' || m.streamType === 'hls';
@@ -25,20 +32,23 @@ export function DetailModal({ m, onClose, onPlay, inList, onToggle }) {
         <div className="p-6">
           <div className="flex flex-wrap items-center gap-3">
             <ImdbBadge score={m.imdb} />
+            <MediaBadge type={m.mediaType} />
             <Meta movie={m} light />
             <LicenseChip m={m} />
           </div>
           <div className="mt-4 flex gap-2.5">
-            <button onClick={() => onPlay(m)} className="flex items-center gap-2 bg-red-600 hover:bg-red-500 px-6 py-2.5 rounded-lg font-bold"><Play size={18} fill="currentColor" /> {(m.streamType === 'mp4' || m.streamType === 'hls') ? 'Watch Free Film' : 'Watch Now'}</button>
+            <button onClick={() => onPlay(m)} className="flex items-center gap-2 bg-red-600 hover:bg-red-500 px-6 py-2.5 rounded-lg font-bold"><Play size={18} fill="currentColor" /> {(m.streamType === 'mp4' || m.streamType === 'hls') ? 'Watch Free Film' : (m.mediaType === 'tv' ? 'Watch Trailer + Where to Watch' : 'Watch Now')}</button>
             <button onClick={() => onToggle(m)} className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/15 px-5 py-2.5 rounded-lg">{inList ? <Check size={17} /> : <Plus size={17} />} My List</button>
           </div>
           <p className="mt-4 text-gray-300 leading-relaxed">{m.overview}</p>
+          {m.watchNote && <p className="mt-3 text-sm text-sky-300 bg-sky-500/10 border border-sky-500/30 rounded-xl px-3 py-2">Where to watch: {m.watchNote}</p>}
           <div className="mt-4 grid sm:grid-cols-2 gap-3 text-sm">
-            <p><span className="text-gray-500">Director: </span>{m.director}</p>
-            <p><span className="text-gray-500">Cast: </span>{m.cast.join(', ')}</p>
-            <p><span className="text-gray-500">Genres: </span>{m.genres.join(', ')}</p>
-            <p className="flex items-center gap-1"><Star size={14} className="text-yellow-400" fill="currentColor" /><span className="text-gray-500">IMDb:</span> {m.imdb.toFixed(1)} / 10</p>
+            <p><span className="text-gray-500">Director: </span>{m.director || '—'}</p>
+            <p><span className="text-gray-500">Cast: </span>{(m.cast || []).join(', ') || '—'}</p>
+            <p><span className="text-gray-500">Genres: </span>{(m.genres || []).join(', ')}</p>
+            <p className="flex items-center gap-1"><Star size={14} className="text-yellow-400" fill="currentColor" /><span className="text-gray-500">IMDb:</span> {m.imdb ? m.imdb.toFixed(1) : 'NR'} / 10</p>
           </div>
+          {m.watchLinks && <WatchLinks links={m.watchLinks} title={m.title} />}
         </div>
       </div>
     </div>
@@ -51,8 +61,9 @@ export function PlayerModal({ m, onClose }) {
   const hasEmbed = !!m.streamUrl;
   const trailer = m.trailer || null;
   const provider = m.provider || null;
+  const watchLinks = m.watchLinks || null;
   const watchUrl = trailer?.watchUrl || m.streamUrlFallback || null;
-  const hasProv = provider && ((provider.flatrate || []).length || (provider.rent || []).length || (provider.buy || []).length);
+  const hasProv = provider && ((provider.flatrate || []).length || (provider.rent || []).length || (provider.buy || []).length || provider.theaters);
   const embedSrc = hasEmbed
     ? (m.streamUrl.includes('autoplay') ? m.streamUrl : `${m.streamUrl}${m.streamUrl.includes('?') ? '&' : '?'}autoplay=1&rel=0`)
     : null;
@@ -88,21 +99,56 @@ export function PlayerModal({ m, onClose }) {
         )}
         {!m._loading && !free && (
           <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-            <p className="font-bold text-sm">Watch full film legally {provider?.region ? <span className="text-gray-400">({provider.region})</span> : null}</p>
+            <p className="font-bold text-sm">{m.mediaType === 'tv' ? 'Watch series legally' : 'Watch full film legally'} {provider?.region ? <span className="text-gray-400">({provider.region})</span> : null}</p>
+            {m.watchNote && <p className="text-xs text-sky-300 mt-1">{m.watchNote}</p>}
             {hasProv ? (
               <div className="space-y-2.5 mt-2">
                 {(provider.flatrate?.length > 0) && (<ProviderRow label="Stream" items={provider.flatrate} />)}
                 {(provider.rent?.length > 0) && (<ProviderRow label="Rent" items={provider.rent} />)}
                 {(provider.buy?.length > 0) && (<ProviderRow label="Buy" items={provider.buy} />)}
-                {provider.link && (<a href={provider.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-xs text-sky-300 underline underline-offset-2">All options on TMDB <ExternalLink size={12} /></a>)}
+                {provider.theaters && <p className="text-xs text-amber-300">In theaters now — check local listings.</p>}
+                {provider.link && (<a href={provider.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-xs text-sky-300 underline underline-offset-2">All options on JustWatch / TMDB <ExternalLink size={12} /></a>)}
               </div>
             ) : (
               <p className="text-xs text-gray-400 mt-1">No streaming offers in this region. {m.tmdbUrl && (<a href={m.tmdbUrl} target="_blank" rel="noreferrer" className="text-sky-300 underline underline-offset-2">Check TMDB</a>)}</p>
             )}
+            {watchLinks && <WatchLinks links={watchLinks} compact />}
           </div>
         )}
         <p className="mt-3 text-xs text-gray-500">{m.notice || (free ? ('Full film from ' + (m.source || 'archive.org')) : 'Trailer only.')}</p>
       </div>
+    </div>
+  );
+}
+
+export function WatchLinks({ links, title, compact = false }) {
+  const items = [
+    ['Netflix', links.netflix, 'bg-[#E50914]'],
+    ['Prime Video', links.primeVideo, 'bg-[#00A8E1]'],
+    ['Disney+', links.disney, 'bg-[#113CCF]'],
+    ['Max', links.max, 'bg-[#5822B4]'],
+    ['Apple TV', links.apple, 'bg-black border border-white/25'],
+    ['Hulu', links.hulu, 'bg-[#1CE783] text-black'],
+    ['JustWatch', links.justwatch, 'bg-amber-500 text-black'],
+    ['YouTube', links.youtube, 'bg-red-700'],
+    ['Google', links.google, 'bg-white/15 border border-white/20'],
+  ];
+  return (
+    <div className={compact ? 'mt-3' : 'mt-4 rounded-2xl border border-white/10 bg-black/30 p-4'}>
+      <p className="font-bold text-sm">Find {title ? `"${title}"` : 'this title'} on:</p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {items.map(([label, href]) => (
+          <a key={label} href={href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold bg-white/10 hover:bg-red-600 border border-white/15 rounded-full px-3 py-1.5">
+            {label} <ExternalLink size={11} />
+          </a>
+        ))}
+        {links.tmdb && (
+          <a href={links.tmdb} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold bg-white/10 hover:bg-red-600 border border-white/15 rounded-full px-3 py-1.5">
+            TMDB <ExternalLink size={11} />
+          </a>
+        )}
+      </div>
+      <p className="mt-2 text-[11px] text-gray-500">Links open the provider search — availability varies by country. MovieSphere never hosts pirated video.</p>
     </div>
   );
 }
@@ -140,7 +186,7 @@ export function ListDrawer({ open, items, onClose, onMore, onRemove }) {
               <img src={m.poster} alt={m.title} className="w-14 aspect-[2/3] object-cover rounded-lg" />
               <div className="flex-1 min-w-0">
                 <p className="font-semibold truncate">{m.title}</p>
-                <p className="text-xs text-gray-400">{m.year} • IMDb {m.imdb.toFixed(1)}</p>
+                <p className="text-xs text-gray-400">{m.year} • {m.mediaLabel || 'Movie'} • IMDb {m.imdb ? m.imdb.toFixed(1) : 'NR'}</p>
                 <div className="mt-1.5 flex gap-2">
                   <button onClick={() => onMore(m)} className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full">Details</button>
                   <button onClick={() => onRemove(m)} className="text-xs bg-red-600/20 text-red-300 hover:bg-red-600 hover:text-white px-3 py-1 rounded-full">Remove</button>

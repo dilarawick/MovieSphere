@@ -1,15 +1,19 @@
 import { useRef } from 'react';
-import { ChevronLeft, ChevronRight, Play, Plus, Check } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Play, Plus, Check, Tv, Clapperboard } from 'lucide-react';
 import { ImdbBadge } from './bits.jsx';
 
 export function MovieCard({ m, onMore, onPlay, inList, onToggle }) {
+  const isTv = (m.mediaType || 'movie') === 'tv';
   return (
     <div className="card-shine group relative shrink-0 w-[160px] md:w-[190px] snap-start">
       <div className="relative overflow-hidden rounded-xl aspect-[2/3] bg-white/5 border border-white/10">
         <img src={m.poster} alt={m.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
         <div className="shine pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full w-1/2" />
-        <div className="absolute top-2 left-2"><ImdbBadge score={m.imdb} size="sm" /></div>
+        <div className="absolute top-2 left-2 flex gap-1">
+          <ImdbBadge score={m.imdb} size="sm" />
+        </div>
         <span className="absolute top-2 right-2 text-[10px] font-bold bg-black/70 px-1.5 py-0.5 rounded border border-white/20">{m.quality}</span>
+        <span className={`absolute bottom-2 left-2 inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded ${isTv ? 'bg-sky-500/90' : 'bg-violet-600/90'}`}>{isTv ? <Tv size={10} /> : <Clapperboard size={10} />}{isTv ? 'TV' : 'MOVIE'}</span>
         <div className="absolute inset-x-0 bottom-0 p-2.5 bg-gradient-to-t from-black via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition">
           <div className="flex gap-1.5">
             <button onClick={() => onPlay(m)} className="flex-1 flex items-center justify-center gap-1 bg-red-600 hover:bg-red-500 rounded-md py-1.5 text-xs font-bold"><Play size={13} fill="currentColor" />Play</button>
@@ -19,7 +23,8 @@ export function MovieCard({ m, onMore, onPlay, inList, onToggle }) {
       </div>
       <button onClick={() => onMore(m)} className="block w-full text-left mt-2">
         <p className="text-sm font-semibold truncate hover:text-red-400">{m.title}</p>
-        <p className="text-xs text-gray-400">{m.year} • {m.genres.slice(0, 2).join(', ')}</p>
+        <p className="text-xs text-gray-400">{m.year} • {(m.mediaType === 'tv' ? 'TV • ' : '')}{m.genres.slice(0, 2).join(', ')}</p>
+        {m.watchNote && <p className="text-[11px] text-sky-300 truncate mt-0.5">{m.watchNote}</p>}
       </button>
     </div>
   );

@@ -36,13 +36,13 @@ export function DetailModal({ m, onClose, onPlay, inList, onToggle }) {
             <Meta movie={m} light />
             <LicenseChip m={m} />
           </div>
-          <div className="mt-4 flex gap-2.5">
-            <button onClick={() => onPlay(m)} className="flex items-center gap-2 bg-red-600 hover:bg-red-500 px-6 py-2.5 rounded-lg font-bold"><Play size={18} fill="currentColor" /> {(m.streamType === 'mp4' || m.streamType === 'hls') ? 'Watch Free Film' : (m.mediaType === 'tv' ? 'Watch Trailer + Where to Watch' : 'Watch Now')}</button>
-            <button onClick={() => onToggle(m)} className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/15 px-5 py-2.5 rounded-lg">{inList ? <Check size={17} /> : <Plus size={17} />} My List</button>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <button onClick={() => onPlay(m)} className="btn-primary"><Play size={22} fill="currentColor" /> {(m.streamType === 'mp4' || m.streamType === 'hls') ? 'Watch Free Film' : (m.mediaType === 'tv' ? 'Watch Trailer + Where to Watch' : 'Watch Now')}</button>
+            <button onClick={() => onToggle(m)} className="btn-secondary">{inList ? <Check size={20} /> : <Plus size={20} />} My List</button>
           </div>
-          <p className="mt-4 text-gray-300 leading-relaxed">{m.overview}</p>
-          {m.watchNote && <p className="mt-3 text-sm text-sky-300 bg-sky-500/10 border border-sky-500/30 rounded-xl px-3 py-2">Where to watch: {m.watchNote}</p>}
-          <div className="mt-4 grid sm:grid-cols-2 gap-3 text-sm">
+          <p className="mt-4 text-base md:text-lg text-gray-200 leading-relaxed">{m.overview}</p>
+          {m.watchNote && <p className="mt-3 text-base text-sky-200 bg-sky-500/10 border border-sky-500/30 rounded-xl px-4 py-3">Where to watch: {m.watchNote}</p>}
+          <div className="mt-4 grid sm:grid-cols-2 gap-3 text-base">
             <p><span className="text-gray-500">Director: </span>{m.director || '—'}</p>
             <p><span className="text-gray-500">Cast: </span>{(m.cast || []).join(', ') || '—'}</p>
             <p><span className="text-gray-500">Genres: </span>{(m.genres || []).join(', ')}</p>
@@ -123,44 +123,44 @@ export function PlayerModal({ m, onClose }) {
 
 export function WatchLinks({ links, title, compact = false }) {
   const items = [
-    ['Netflix', links.netflix, 'bg-[#E50914]'],
-    ['Prime Video', links.primeVideo, 'bg-[#00A8E1]'],
-    ['Disney+', links.disney, 'bg-[#113CCF]'],
-    ['Max', links.max, 'bg-[#5822B4]'],
-    ['Apple TV', links.apple, 'bg-black border border-white/25'],
-    ['Hulu', links.hulu, 'bg-[#1CE783] text-black'],
-    ['JustWatch', links.justwatch, 'bg-amber-500 text-black'],
-    ['YouTube', links.youtube, 'bg-red-700'],
-    ['Google', links.google, 'bg-white/15 border border-white/20'],
+    ['Netflix', links.netflix],
+    ['Prime Video', links.primeVideo],
+    ['Disney+', links.disney],
+    ['Max', links.max],
+    ['Apple TV', links.apple],
+    ['Hulu', links.hulu],
+    ['JustWatch', links.justwatch],
+    ['YouTube', links.youtube],
+    ['Google', links.google],
   ];
   return (
-    <div className={compact ? 'mt-3' : 'mt-4 rounded-2xl border border-white/10 bg-black/30 p-4'}>
-      <p className="font-bold text-sm">Find {title ? `"${title}"` : 'this title'} on:</p>
-      <div className="mt-2 flex flex-wrap gap-2">
+    <div className={compact ? 'mt-4' : 'mt-4 rounded-2xl border border-white/10 bg-black/30 p-5'}>
+      <p className="font-bold text-base md:text-lg">Find {title ? `"${title}"` : 'this title'} on:</p>
+      <div className="mt-3 flex flex-wrap gap-2.5">
         {items.map(([label, href]) => (
-          <a key={label} href={href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold bg-white/10 hover:bg-red-600 border border-white/15 rounded-full px-3 py-1.5">
-            {label} <ExternalLink size={11} />
+          <a key={label} href={href} target="_blank" rel="noreferrer" className="btn-watch">
+            {label} <ExternalLink size={14} />
           </a>
         ))}
         {links.tmdb && (
-          <a href={links.tmdb} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold bg-white/10 hover:bg-red-600 border border-white/15 rounded-full px-3 py-1.5">
-            TMDB <ExternalLink size={11} />
+          <a href={links.tmdb} target="_blank" rel="noreferrer" className="btn-watch">
+            TMDB <ExternalLink size={14} />
           </a>
         )}
       </div>
-      <p className="mt-2 text-[11px] text-gray-500">Links open the provider search — availability varies by country. MovieSphere never hosts pirated video.</p>
+      <p className="mt-3 text-sm text-gray-400">Links open the provider search — availability varies by country. MovieSphere never hosts pirated video.</p>
     </div>
   );
 }
 
 function ProviderRow({ label, items }) {
   return (
-    <div className="flex items-center gap-3">
-      <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400 w-14 shrink-0">{label}</span>
+    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+      <span className="text-sm font-bold uppercase tracking-widest text-gray-300 w-16 shrink-0">{label}</span>
       <div className="flex flex-wrap gap-2">
         {items.map((p) => (
-          <span key={p.name} className="inline-flex items-center gap-1.5 text-xs bg-black/40 border border-white/15 rounded-full pl-1 pr-3 py-1">
-            {p.logo ? <img src={p.logo} alt={p.name} className="w-5 h-5 rounded-full" /> : <Star size={12} className="text-yellow-400 ml-1" />}
+          <span key={p.name} className="inline-flex items-center gap-2 text-sm md:text-base bg-black/40 border border-white/15 rounded-full pl-1.5 pr-4 py-1.5">
+            {p.logo ? <img src={p.logo} alt={p.name} className="w-6 h-6 rounded-full" /> : <Star size={14} className="text-yellow-400 ml-1" />}
             {p.name}
           </span>
         ))}
@@ -179,17 +179,17 @@ export function ListDrawer({ open, items, onClose, onMore, onRemove }) {
           <h3 className="text-xl font-extrabold">My List ({items.length})</h3>
           <button onClick={onClose} className="p-2 rounded-full bg-white/10 hover:bg-red-600"><X size={16} /></button>
         </div>
-        {items.length === 0 && <p className="text-sm text-gray-400">Nothing saved yet. Hover any poster and tap + to add it here.</p>}
+        {items.length === 0 && <p className="text-base text-gray-300">Nothing saved yet. Hover any poster and tap + to add it here.</p>}
         <div className="space-y-3">
           {items.map((m) => (
-            <div key={m.id} className="flex gap-3 bg-white/5 border border-white/10 rounded-xl p-2">
-              <img src={m.poster} alt={m.title} className="w-14 aspect-[2/3] object-cover rounded-lg" />
+            <div key={m.id} className="flex gap-3 bg-white/5 border border-white/10 rounded-xl p-3">
+              <img src={m.poster} alt={m.title} className="w-16 aspect-[2/3] object-cover rounded-lg" />
               <div className="flex-1 min-w-0">
-                <p className="font-semibold truncate">{m.title}</p>
-                <p className="text-xs text-gray-400">{m.year} • {m.mediaLabel || 'Movie'} • IMDb {m.imdb ? m.imdb.toFixed(1) : 'NR'}</p>
-                <div className="mt-1.5 flex gap-2">
-                  <button onClick={() => onMore(m)} className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full">Details</button>
-                  <button onClick={() => onRemove(m)} className="text-xs bg-red-600/20 text-red-300 hover:bg-red-600 hover:text-white px-3 py-1 rounded-full">Remove</button>
+                <p className="font-semibold text-base truncate">{m.title}</p>
+                <p className="text-sm text-gray-300">{m.year} • {m.mediaLabel || 'Movie'} • IMDb {m.imdb ? m.imdb.toFixed(1) : 'NR'}</p>
+                <div className="mt-2 flex gap-2">
+                  <button onClick={() => onMore(m)} className="text-sm font-semibold bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full min-h-[40px]">Details</button>
+                  <button onClick={() => onRemove(m)} className="text-sm font-semibold bg-red-600/20 text-red-300 hover:bg-red-600 hover:text-white px-4 py-2 rounded-full min-h-[40px]">Remove</button>
                 </div>
               </div>
             </div>

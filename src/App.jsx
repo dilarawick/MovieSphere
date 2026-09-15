@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Flame, Trophy, LayoutGrid, SearchX, Clapperboard, WifiOff, BadgeCheck } from 'lucide-react';
+import { Flame, Trophy, LayoutGrid, SearchX, Clapperboard, WifiOff, BadgeCheck, Sparkles, Tv } from 'lucide-react';
 import Navbar from './components/Navbar.jsx';
 import Hero from './components/Hero.jsx';
 import Row from './components/Row.jsx';
@@ -15,6 +15,7 @@ export default function App() {
   const [freeFilms, setFreeFilms] = useState([]);
   const [apiOnline, setApiOnline] = useState(true);
   const [lang, setLang] = useState('all');
+  const [mediaType, setMediaType] = useState('all');
   const [query, setQuery] = useState('');
   const [genre, setGenre] = useState('All');
   const [sort, setSort] = useState('latest');
@@ -39,10 +40,10 @@ export default function App() {
 
   useEffect(() => {
     const t = setTimeout(() => {
-      api.movies({ lang, q: query, genre, sort, limit: 100 }).then(setMovies).catch(() => {});
+      api.movies({ lang, type: mediaType, q: query, genre, sort, limit: 100 }).then(setMovies).catch(() => {});
     }, 300);
     return () => clearTimeout(t);
-  }, [lang, query, genre, sort]);
+  }, [lang, mediaType, query, genre, sort]);
 
   const inList = (m) => watchlist.some((x) => x.id === m.id);
   const toggle = (m) => setWatchlist((w) => (inList(m) ? w.filter((x) => x.id !== m.id) : [...w, m]));
@@ -60,7 +61,10 @@ export default function App() {
   };
   const featured = useMemo(() => movies.filter((m) => m.featured), [movies]);
   const trending = useMemo(() => movies.filter((m) => m.trending), [movies]);
-  const english = useMemo(() => movies.filter((m) => (m.language || 'en') === 'en'), [movies]);
+  const justMovies = useMemo(() => movies.filter((m) => (m.mediaType || 'movie') === 'movie'), [movies]);
+  const tvShows = useMemo(() => movies.filter((m) => (m.mediaType || 'movie') === 'tv'), [movies]);
+  const latest = useMemo(() => movies.filter((m) => (m.year || 0) >= 2024).sort((a, b) => (b.year || 0) - (a.year || 0)), [movies]);
+  const english = useMemo(() => movies.filter((m) => (m.language || 'en') === 'en' && (m.mediaType || 'movie') === 'movie'), [movies]);
   const sinhala = useMemo(() => movies.filter((m) => m.language === 'si'), [movies]);
   const topRated = useMemo(() => [...movies].sort((a, b) => (b.imdb || 0) - (a.imdb || 0)).slice(0, 10), [movies]);
   return (
@@ -77,6 +81,10 @@ export default function App() {
           {[{ k: 'all', l: 'All Languages' }, { k: 'en', l: 'English' }, { k: 'si', l: 'Sinhala' }].map((t) => (
             <button key={t.k} onClick={() => setLang(t.k)} className={lang === t.k ? 'px-4 py-2 rounded-full text-sm font-bold bg-red-600' : 'px-4 py-2 rounded-full text-sm font-semibold bg-white/5 border border-white/15'}>{t.l}</button>
           ))}
+          <span className="mx-1 h-6 w-px bg-white/15" />
+          {[{ k: 'all', l: 'Movies + TV' }, { k: 'movie', l: 'Movies' }, { k: 'tv', l: 'TV Shows' }].map((t) => (
+            <button key={t.k} onClick={() => setMediaType(t.k)} className={mediaType === t.k ? 'px-4 py-2 rounded-full text-sm font-bold bg-sky-600' : 'px-4 py-2 rounded-full text-sm font-semibold bg-white/5 border border-white/15'}>{t.l}</button>
+          ))}
         </div>
         {freeFilms.length > 0 && (
           <div>
@@ -88,7 +96,15 @@ export default function App() {
           <div className="flex items-center gap-2 mb-3 text-red-500 font-bold uppercase tracking-widest text-xs">
             <Flame size={15} /> Trending Now
           </div>
-          <Row title="Trending Movies" sub="Most watched this week" movies={trending} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
+          <Row title="Trending Movies & Shows" sub="Most watched this week" movies={trending} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
+        </div>
+        <div id="latest">
+          <div className="flex items-center gap-2 mb-3 text-amber-400 font-bold uppercase tracking-widest text-xs"><Sparkles size={15} /> 2026 + Latest releases</div>
+          <Row title="Latest 2024 – 2026" sub="New movies & TV with where-to-watch info" movies={latest} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
+        </div>
+        <div id="tv">
+          <div className="flex items-center gap-2 mb-3 text-sky-400 font-bold uppercase tracking-widest text-xs"><Tv size={15} /> TV Shows</div>
+          <Row title="TV Shows" sub="Stream info: Netflix, Max, Disney+ & more" movies={tvShows} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
         </div>
         <div>
           <div className="flex items-center gap-2 mb-3 text-sky-400 font-bold uppercase tracking-widest text-xs"><Clapperboard size={15} /> Sinhala Cinema</div>
@@ -120,7 +136,7 @@ export default function App() {
               <p className="mt-2 text-xs">If it says NON-JSON with &lt;!doctype — frontend and API are on different services. Set VITE_API_URL to the backend URL and redeploy.</p>
             </div>
           ) : movies.length === 0 ? (
-            <div className="py-14 text-center text-gray-400"><SearchX className="mx-auto mb-3" size={32} /><p>No movies for this filter — try “All”.</p></div>
+            <div className="py-14 text-center text-gray-400"><SearchX className="mx-auto mb-3" size={32} /><p>No titles for this filter — try “All”.</p></div>
           ) : (
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-6 justify-items-center">
               {movies.map((m) => (<MovieCard key={m.id} m={m} onMore={setDetail} onPlay={play} inList={inList(m)} onToggle={toggle} />))}
@@ -129,7 +145,7 @@ export default function App() {
         </div>
         <div id="top-rated">
           <div className="flex items-center gap-2 mb-3 text-yellow-400 font-bold uppercase tracking-widest text-xs"><Trophy size={15} /> Top 10 IMDb</div>
-          <Row title="Highest Rated Movies" sub="Sorted by IMDb score" movies={topRated} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
+          <Row title="Highest Rated Movies & Shows" sub="Sorted by IMDb score" movies={topRated} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
         </div>
         <footer className="pt-6 border-t border-white/10 flex flex-col md:flex-row gap-3 items-center justify-between text-sm text-gray-400">
           <p className="flex items-center gap-2 font-bold text-white"><span className="grid place-items-center w-8 h-8 rounded-lg bg-red-600"><Clapperboard size={17} /></span>MovieSphere</p>

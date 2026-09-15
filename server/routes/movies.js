@@ -14,6 +14,10 @@ import { BULK_COMEDY } from '../data/seedBulkComedy.js';
 import { BULK_FAMILY } from '../data/seedBulkFamily.js';
 import { BULK_THRILLER } from '../data/seedBulkThriller.js';
 import { BULK_2026 } from '../data/seedBulkExtra.js';
+import { REAL2026_A } from '../data/seed2026real1.js';
+import { REAL2026_B } from '../data/seed2026real2.js';
+import { REAL2026_C } from '../data/seed2026real3.js';
+import { REAL2026_D } from '../data/seed2026real4.js';
 
 const router = express.Router();
 function dedupe(list) {
@@ -42,6 +46,10 @@ const memoryCatalogue = dedupe([
   ...withType(BULK_FAMILY, 'movie'),
   ...withType(BULK_THRILLER, 'movie'),
   ...withType(BULK_2026, 'movie'),
+  ...withType(REAL2026_A, 'movie'),
+  ...withType(REAL2026_B, 'movie'),
+  ...withType(REAL2026_C, 'movie'),
+  ...withType(REAL2026_D, 'movie'),
   ...withType(LATEST_TV, 'tv'),
 ]).map((m, i) => ({ _id: `seed-${i}`, ...m }));
 

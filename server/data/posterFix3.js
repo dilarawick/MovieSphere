@@ -7,6 +7,10 @@ export const POSTER_FIX3 = {
     "https://image.tmdb.org/t/p/w500/fr96XzlzsONrQrGfdLMiwtQjott.jpg",
     "https://image.tmdb.org/t/p/original/ag66gJCiZ06q1GSJuQlhGLi3Udx.jpg"
   ],
+  "The End of Oak Street (2026 Wide)": [
+    "https://image.tmdb.org/t/p/w500/fr96XzlzsONrQrGfdLMiwtQjott.jpg",
+    "https://image.tmdb.org/t/p/original/ag66gJCiZ06q1GSJuQlhGLi3Udx.jpg"
+  ],
   "Late Night with the Devil": [
     "https://image.tmdb.org/t/p/w500/hu40Uxp9WtpL34jv3zyWLb5zEVY.jpg",
     "https://image.tmdb.org/t/p/original/4woSOUD0equAYzvwhWBHIJDCM88.jpg"
@@ -298,7 +302,51 @@ export const POSTER_FIX3 = {
   "The Backrooms": [
     "https://image.tmdb.org/t/p/w500/iSSxq56wHePwB6gNe10Z95Tb5lc.jpg",
     "https://image.tmdb.org/t/p/original/9BdWGaaGXrXOeQYXsmPEIRFkwRV.jpg"
-  ]
+  ],
+  "Terrifier 3": [
+    "https://image.tmdb.org/t/p/w500/ju10W5gl3PPK3b7TjEmVOZap51I.jpg",
+    "https://image.tmdb.org/t/p/original/bHfGHipZ32Oec94FDJO4mWs3aZ5.jpg"
+  ],
+  "Longlegs": [
+    "https://image.tmdb.org/t/p/w500/1EwNyiiNFd863H4e8nWEzutnZD7.jpg",
+    "https://image.tmdb.org/t/p/original/6ToGkmqn0KG0UGGGUAC1Ww0e5CM.jpg"
+  ],
+  "Wicked: Part One": [
+    "https://image.tmdb.org/t/p/w500/xDGbZ0JJ3mYaGKy4Nzd9Kph6M9L.jpg",
+    "https://image.tmdb.org/t/p/original/w22GVYotTIVC1dUd58mRhwPqiS.jpg"
+  ],
+  "Ghostbusters: Frozen Empire": [
+    "https://image.tmdb.org/t/p/w500/e1J2oNzSBdou01sUvriVuoYp0pJ.jpg",
+    "https://image.tmdb.org/t/p/original/5cCfqeUH2f5Gnu7Lh9xepY9TB6x.jpg"
+  ],
+  "Thelma": [
+    "https://image.tmdb.org/t/p/w500/rUcuageYgv9SsJoWuc0seRWG6JC.jpg",
+    "https://image.tmdb.org/t/p/original/wkPPRIducGfsbaUPsWfw0MCQdX7.jpg"
+  ],
+  "The Holdovers": [
+    "https://image.tmdb.org/t/p/w500/VHSzNBTwxV8vh7wylo7O9CLdac.jpg",
+    "https://image.tmdb.org/t/p/original/A99WMiz0ASpH9coOFrxSEuwTWx0.jpg"
+  ],
+  "No Hard Feelings": [
+    "https://image.tmdb.org/t/p/w500/gD72DhJ7NbfxvtxGiAzLaa0xaoj.jpg",
+    "https://image.tmdb.org/t/p/original/rRcNmiH55Tz0ugUsDUGmj8Bsa4V.jpg"
+  ],
+  "Migration": [
+    "https://image.tmdb.org/t/p/w500/ldfCF9RhR40mppkzmftxapaHeTo.jpg",
+    "https://image.tmdb.org/t/p/original/gklkxY0veMajdCiGe6ggsh07VG2.jpg"
+  ],
+  "John Wick: Chapter 4 Alt": [
+    "https://image.tmdb.org/t/p/w500/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg",
+    "https://image.tmdb.org/t/p/original/h8gHn0OzBoaefsYseUByqsmEDMY.jpg"
+  ],
+  "Night of the Zoopocalypse": [
+    "https://image.tmdb.org/t/p/w500/nCejOVZcOxKS27nnbh28NKXOdXF.jpg",
+    "https://image.tmdb.org/t/p/original/h2SEtzuABKmcZAnKBJ1za3kETTY.jpg"
+  ],
+  "The Exorcism": [
+    "https://image.tmdb.org/t/p/w500/ar2h87jlTfMlrDZefR3VFz1SfgH.jpg",
+    "https://image.tmdb.org/t/p/original/93dDAqtrFQk5zeofDtQGExPlYjC.jpg"
+  ],
 };
 
 export function applyPosterFix3(list) {

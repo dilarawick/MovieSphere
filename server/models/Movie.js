@@ -22,11 +22,18 @@ const movieSchema = new mongoose.Schema(
     trending: { type: Boolean, default: false },
     featured: { type: Boolean, default: false },
     trailerYouTubeKey: String,
+    mediaType: { type: String, enum: ['movie', 'tv'], default: 'movie', index: true },
+    mediaLabel: { type: String, default: 'Movie' },
+    watchNote: String,
+    curatedProviders: {
+      flatrate: [{ name: String, logo: String }],
+      rent: [{ name: String, logo: String }],
+      buy: [{ name: String, logo: String }],
+      theaters: { type: Boolean, default: false },
+    },
     // ---- Legal streaming fields ----
-    // streamType: 'mp4' | 'hls' | 'youtube' | 'youtube-search' | 'none'
     streamType: { type: String, default: 'youtube-search' },
     streamUrl: String,
-    // source: where the stream legally comes from
     source: { type: String, default: 'youtube-legal' },
     license: { type: String, default: 'All rights reserved — trailer only' },
     licenseUrl: String,

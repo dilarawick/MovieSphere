@@ -7,6 +7,8 @@ body {
   background: #08090f;
   color: #f3f4f6;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
 }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -20,3 +22,18 @@ body {
     linear-gradient(0deg, #08090f 2%, transparent 45%, rgba(8,9,15,.4) 100%);
 }
 .card-shine:hover .shine { opacity: 1; transform: translateX(120%) skewX(-18deg); }
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 hover:bg-red-500 active:bg-red-700 px-7 py-3.5 text-base md:text-lg font-bold shadow-xl shadow-red-900/40 transition-all hover:scale-[1.03] active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-red-400/60 min-h-[48px];
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-white/15 hover:bg-white/25 active:bg-white/30 px-6 py-3.5 text-base md:text-lg font-semibold border border-white/25 backdrop-blur transition-all hover:scale-[1.03] active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-white/40 min-h-[48px];
+  }
+  .btn-chip {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-2.5 text-base font-semibold transition-all focus:outline-none focus-visible:ring-4 focus-visible:ring-red-400/50 min-h-[44px];
+  }
+  .btn-watch {
+    @apply inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-sm md:text-base font-semibold bg-white/10 hover:bg-red-600 border border-white/20 transition-all hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-red-400/50 min-h-[44px];
+  }
+}

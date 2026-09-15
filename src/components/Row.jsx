@@ -1,13 +1,27 @@
-import { useRef } from 'react';
-import { ChevronLeft, ChevronRight, Play, Plus, Check, Tv, Clapperboard } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight, Play, Plus, Check, Tv, Clapperboard, ImageOff } from 'lucide-react';
 import { ImdbBadge } from './bits.jsx';
+
+export function PosterImg({ src, title, className }) {
+  const [err, setErr] = useState(false);
+  if (!src || err) {
+    return (
+      <div className={`flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-[#1a1040] via-[#241a2e] to-[#0d2b1d] text-center p-4 ${className || ''}`}>
+        <ImageOff size={28} className="text-white/40" />
+        <p className="font-bold text-base leading-tight line-clamp-3">{title}</p>
+        <p className="text-xs text-white/50">Poster coming soon</p>
+      </div>
+    );
+  }
+  return <img src={src} alt={title} loading="lazy" onError={() => setErr(true)} className={className} />;
+}
 
 export function MovieCard({ m, onMore, onPlay, inList, onToggle }) {
   const isTv = (m.mediaType || 'movie') === 'tv';
   return (
     <div className="card-shine group relative shrink-0 w-[160px] md:w-[190px] snap-start">
       <div className="relative overflow-hidden rounded-xl aspect-[2/3] bg-white/5 border border-white/10">
-        <img src={m.poster} alt={m.title} loading="lazy" className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
+        <PosterImg src={m.poster} title={m.title} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
         <div className="shine pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full w-1/2" />
         <div className="absolute top-2 left-2 flex gap-1">
           <ImdbBadge score={m.imdb} size="sm" />

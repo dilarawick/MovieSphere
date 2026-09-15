@@ -21,7 +21,7 @@ export const BULK_FINAL = mk([
 [787699, 'Wonka', 2023, 7.0, ['Comedy','Family'], 'Young Wonka musical origin story.', 'Timothee Chalamet', 'Paul King', 0, 'Stream on Max. Rent on Prime Video.', ['max']],
 [1029576, 'Wish', 2023, 5.6, ['Animation','Family'], 'Asha wishes on a star for Rosas.', 'Ariana DeBose', 'Chris Buck', 0, 'Stream on Disney+. Rent on Prime Video.', ['disney']],
 [572802, 'Aquaman and the Lost Kingdom', 2023, 5.7, ['Action','Adventure'], 'Arthur teams with Orm against Black Manta.', 'Jason Momoa', 'James Wan', 0, 'Stream on Max / Netflix. Rent on Prime Video.', ['max']],
-[1211951, 'Ghostbusters: Frozen Empire', 2024, 6.1, ['Action','Comedy'], 'New and old busters freeze NYC.', 'Paul Rudd', 'Gil Kenan', 0, 'Stream on Netflix. Rent on Prime Video.', ['netflix']],
+[967847, 'Ghostbusters: Frozen Empire', 2024, 6.1, ['Action','Comedy'], 'New and old busters freeze NYC.', 'Paul Rudd', 'Gil Kenan', 0, 'Stream on Netflix. Rent on Prime Video.', ['netflix']],
 [1194915, 'Challengers', 2024, 7.2, ['Drama','Romance','Sport'], 'Tennis love triangle turns pro.', 'Zendaya', 'Luca Guadagnino', 0, 'Stream on Prime Video.', ['prime']],
 [1059094, 'Hit Man', 2024, 6.8, ['Comedy','Romance','Crime'], 'A fake hitman falls for a client.', 'Glen Powell', 'Richard Linklater', 0, 'Stream on Netflix.', ['netflix']],
 [1017163, 'Civil War', 2024, 7.0, ['Action','Drama'], 'War journalists cross a fractured America.', 'Kirsten Dunst', 'Alex Garland', 0, 'Stream on Peacock. Rent on Prime Video.', ['peacock']],

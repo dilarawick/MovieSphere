@@ -100,6 +100,34 @@ export function PlayerModal({ m, onClose }) {
         )}
         {!m._loading && !free && (
           <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+            {m.servers && m.servers.length > 0 && (
+              <div className="mb-4">
+                <p className="font-bold text-sm mb-2">Alternative Servers</p>
+                <div className="flex flex-wrap gap-2">
+                  {m.servers.map((s) =>
+                    s.type === 'iframe' ? (
+                      <button
+                        key={s.name}
+                        onClick={() => window.open(s.url, '_blank', 'noopener,noreferrer')}
+                        className="btn-secondary text-xs px-3 py-1.5"
+                      >
+                        {s.name} ({s.quality}) — External
+                      </button>
+                    ) : (
+                      <a
+                        key={s.name}
+                        href={s.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-secondary text-xs px-3 py-1.5"
+                      >
+                        {s.name} — Search
+                      </a>
+                    )
+                  )}
+                </div>
+              </div>
+            )}
             <p className="font-bold text-sm">{m.mediaType === 'tv' ? 'Watch series legally' : 'Watch full film legally'} {provider?.region ? <span className="text-gray-400">({provider.region})</span> : null}</p>
             {m.watchNote && <p className="text-xs text-sky-300 mt-1">{m.watchNote}</p>}
             {hasProv ? (

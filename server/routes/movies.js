@@ -2,6 +2,7 @@ import express from 'express';
 import { Movie } from '../models/Movie.js';
 import { toClientMovie, fetchTmdb, getTmdbTrailer, getTmdbProviders } from '../services/movieService.js';
 import { applyPosterFix3 } from '../data/posterFix3.js';
+import { getStreamingServers } from '../services/vidsrc.js';
 import { ENGLISH } from '../data/seedEnglish.js';
 import { ENGLISH_MORE } from '../data/seedEnglishMore.js';
 import { PUBLIC_DOMAIN } from '../data/seedPublicDomain.js';
@@ -186,6 +187,9 @@ router.get('/:id/stream', async (req, res) => {
   const q = encodeURIComponent(`${c.title} ${c.year || ''} official trailer`.trim());
   const searchUrl = `https://www.youtube.com/results?search_query=${q}`;
 
+  // Generate alternative streaming server options via vidsrc
+  const servers = getStreamingServers(c);
+
   res.json({
     title: c.title,
     year: c.year,
@@ -205,9 +209,10 @@ router.get('/:id/stream', async (req, res) => {
     trailer: trailerKey
       ? { key: trailerKey, embedUrl: trailerEmbed, watchUrl: trailerWatch }
       : { key: null, embedUrl: null, watchUrl: searchUrl },
+    servers,
     notice: mediaKind === 'tv'
       ? 'Trailer plays in-app. Full episodes are under copyright — use the provider links below to watch legally.'
-      : 'Trailer plays in-app. Full film is under copyright — use the provider links below to watch legally.',
+      : 'Trailer plays in-app. Use the server options below to watch the full film.',
   });
 });
 

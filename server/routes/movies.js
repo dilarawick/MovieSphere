@@ -8,20 +8,42 @@ import { SINHALA } from '../data/seedSinhala.js';
 import { LATEST_MOVIES } from '../data/seed2026a.js';
 import { LATEST_MORE } from '../data/seed2026b.js';
 import { LATEST_TV } from '../data/seed2026c.js';
+import { BULK_HORROR } from '../data/seedBulkHorror1.js';
+import { BULK_HORROR2 } from '../data/seedBulkHorror2.js';
+import { BULK_COMEDY } from '../data/seedBulkComedy.js';
+import { BULK_FAMILY } from '../data/seedBulkFamily.js';
+import { BULK_THRILLER } from '../data/seedBulkThriller.js';
+import { BULK_2026 } from '../data/seedBulkExtra.js';
 
 const router = express.Router();
+function dedupe(list) {
+  const seen = new Set();
+  return list.filter((m) => {
+    if (m.skip) return false;
+    const key = `${(m.title || '').toLowerCase().trim()}::${m.year || ''}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
 function withType(list, fallback) {
   return list.filter((m) => !m.skip).map((m) => ({ mediaType: fallback, ...m }));
 }
-const memoryCatalogue = [
+const memoryCatalogue = dedupe([
   ...withType(ENGLISH, 'movie'),
   ...withType(ENGLISH_MORE, 'movie'),
   ...withType(PUBLIC_DOMAIN, 'movie'),
   ...withType(SINHALA, 'movie'),
   ...withType(LATEST_MOVIES, 'movie'),
   ...withType(LATEST_MORE, 'movie'),
+  ...withType(BULK_HORROR, 'movie'),
+  ...withType(BULK_HORROR2, 'movie'),
+  ...withType(BULK_COMEDY, 'movie'),
+  ...withType(BULK_FAMILY, 'movie'),
+  ...withType(BULK_THRILLER, 'movie'),
+  ...withType(BULK_2026, 'movie'),
   ...withType(LATEST_TV, 'tv'),
-].map((m, i) => ({ _id: `seed-${i}`, ...m }));
+]).map((m, i) => ({ _id: `seed-${i}`, ...m }));
 
 async function allMovies() {
   if (dbHasMovies()) return Movie.find().lean();

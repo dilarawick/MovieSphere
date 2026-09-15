@@ -24,5 +24,5 @@ export const BULK_FAMILY = mk([
 [987686, 'A Family Affair', 2024, 5.4, ['Comedy','Romance'], 'A assistant falls for a movie star.', 'Nicole Kidman', 'Richard LaGravenese', 0, 'Stream on Netflix.', ['netflix']],
 [1104845, 'The Long Game', 2024, 7.0, ['Drama','Sport'], 'Mexican-American caddies win golf glory.', 'Jay Hernandez', 'Julio Quintana', 0, 'Stream on Netflix.', ['netflix']],
 [805509, 'Back to Black', 2024, 6.3, ['Drama','Music'], 'Amy Winehouse rise and fall.', 'Marisa Abela', 'Sam Taylor-Johnson', 0, 'Stream on Peacock. Rent on Prime Video.', ['peacock']],
-[1041619, 'Thelma', 2024, 7.0, ['Comedy','Action'], 'A 93-year-old hunts phone scammers.', 'June Squibb', 'Josh Margolin', 0, 'Stream on Hulu. Rent on Prime Video.', ['hulu']],
+[1051891, 'Thelma', 2024, 7.0, ['Comedy','Action'], 'A 93-year-old hunts phone scammers.', 'June Squibb', 'Josh Margolin', 0, 'Stream on Hulu. Rent on Prime Video.', ['hulu']],
 ]);

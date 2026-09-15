@@ -1,6 +1,7 @@
 import express from 'express';
 import { Movie } from '../models/Movie.js';
 import { toClientMovie, fetchTmdb, getTmdbTrailer, getTmdbProviders } from '../services/movieService.js';
+import { applyPosterFix3 } from '../data/posterFix3.js';
 import { ENGLISH } from '../data/seedEnglish.js';
 import { ENGLISH_MORE } from '../data/seedEnglishMore.js';
 import { PUBLIC_DOMAIN } from '../data/seedPublicDomain.js';
@@ -55,7 +56,7 @@ const memoryCatalogue = dedupe([
 
 async function allMovies() {
   if (dbHasMovies()) return Movie.find().lean();
-  return memoryCatalogue;
+  return applyPosterFix3(memoryCatalogue);
 }
 
 let _dbCount = -1;

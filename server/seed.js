@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import { Movie } from './models/Movie.js';
+import { applyPosterFix3 } from './data/posterFix3.js';
 import { ENGLISH } from './data/seedEnglish.js';
 import { ENGLISH_MORE } from './data/seedEnglishMore.js';
 import { PUBLIC_DOMAIN } from './data/seedPublicDomain.js';
@@ -31,7 +32,7 @@ function dedupe(list) {
     return true;
   });
 }
-const all = dedupe([
+const all = applyPosterFix3(dedupe([
   ...tag(ENGLISH, 'movie'),
   ...tag(ENGLISH_MORE, 'movie'),
   ...tag(PUBLIC_DOMAIN, 'movie'),

@@ -187,8 +187,10 @@ router.get('/:id/stream', async (req, res) => {
   const q = encodeURIComponent(`${c.title} ${c.year || ''} official trailer`.trim());
   const searchUrl = `https://www.youtube.com/results?search_query=${q}`;
 
-  // Generate alternative streaming server options via vidsrc
+  // Generate streaming servers via vidsrc — in-app full-movie player + backups
   const servers = getStreamingServers(c);
+  // Primary in-app embed (VidSrc full movie) — the client plays this by default.
+  const playEmbed = (servers.find((s) => s.type === 'iframe') || {}).url || null;
 
   res.json({
     title: c.title,
@@ -210,9 +212,10 @@ router.get('/:id/stream', async (req, res) => {
       ? { key: trailerKey, embedUrl: trailerEmbed, watchUrl: trailerWatch }
       : { key: null, embedUrl: null, watchUrl: searchUrl },
     servers,
+    playEmbed,
     notice: mediaKind === 'tv'
-      ? 'Trailer plays in-app. Full episodes are under copyright — use the provider links below to watch legally.'
-      : 'Trailer plays in-app. Use the server options below to watch the full film.',
+      ? 'Full show streams via VidSrc (defaults to Season 1, Episode 1). Provider links below to watch legally.'
+      : 'Full movie streams via VidSrc. Provider links below to watch legally.',
   });
 });
 

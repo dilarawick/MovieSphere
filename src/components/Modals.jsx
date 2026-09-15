@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { X, Play, Plus, Check, Star, BadgeCheck, ExternalLink, Loader2, Tv, Clapperboard } from 'lucide-react';
 import { ImdbBadge, Meta } from './bits.jsx';
 import { PosterImg } from './Row.jsx';
@@ -57,17 +58,34 @@ export function DetailModal({ m, onClose, onPlay, inList, onToggle }) {
 }
 
 export function PlayerModal({ m, onClose }) {
+  // tab: null = auto (play the VidSrc full movie when available, else trailer),
+  // 'trailer' = YouTube trailer tab, or a server url from m.servers.
+  const [tab, setTab] = useState(null);
+  const movieId = m ? m.id : null;
+  useEffect(() => { setTab(null); }, [movieId]);
   if (!m) return null;
+
   const free = m.streamType === 'mp4' || m.streamType === 'hls';
-  const hasEmbed = !!m.streamUrl;
+  const embedServers = (m.servers || []).filter((s) => s.type === 'iframe');
+  const linkServers = (m.servers || []).filter((s) => s.type === 'link');
+  const playEmbed = m.playEmbed || (embedServers[0] ? embedServers[0].url : null);
   const trailer = m.trailer || null;
   const provider = m.provider || null;
   const watchLinks = m.watchLinks || null;
   const watchUrl = trailer?.watchUrl || m.streamUrlFallback || null;
   const hasProv = provider && ((provider.flatrate || []).length || (provider.rent || []).length || (provider.buy || []).length || provider.theaters);
-  const embedSrc = hasEmbed
-    ? (m.streamUrl.includes('autoplay') ? m.streamUrl : `${m.streamUrl}${m.streamUrl.includes('?') ? '&' : '?'}autoplay=1&rel=0`)
-    : null;
+  const yt = (u) => (u.includes('autoplay') ? u : `${u}${u.includes('?') ? '&' : '?'}autoplay=1&rel=0`);
+  const trailerSrc = m.streamUrl ? yt(m.streamUrl) : (trailer?.embedUrl ? yt(trailer.embedUrl) : null);
+
+  const activeServer = tab && tab !== 'trailer' ? embedServers.find((s) => s.url === tab) : null;
+  const mode = free && m.streamUrl ? 'free'
+    : tab === 'trailer' ? 'trailer'
+    : (activeServer || (!tab && playEmbed)) ? 'server'
+    : trailerSrc ? 'trailer'
+    : 'none';
+  const activeUrl = mode === 'server' ? (activeServer ? activeServer.url : playEmbed) : mode === 'trailer' ? trailerSrc : null;
+  const showTabs = !m._loading && !free && (playEmbed || trailerSrc);
+
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/95" onClick={onClose} />
@@ -77,54 +95,66 @@ export function PlayerModal({ m, onClose }) {
           <button onClick={onClose} className="p-2 rounded-full bg-white/10 hover:bg-red-600 shrink-0"><X size={18} /></button>
         </div>
         <div className="mb-3"><LicenseChip m={m} /></div>
+
+        {showTabs && (
+          <div className="mb-3 flex flex-wrap gap-2 items-center">
+            {embedServers.map((s) => (
+              <button
+                key={s.url}
+                onClick={() => setTab(s.url)}
+                className={(mode === 'server' && activeUrl === s.url) ? 'btn-primary text-xs px-3 py-2' : 'btn-secondary text-xs px-3 py-2'}
+              >
+                <Play size={12} fill="currentColor" /> {s.name} — {s.label || 'Full Movie'}
+              </button>
+            ))}
+            {trailerSrc && (
+              <button onClick={() => setTab('trailer')} className={mode === 'trailer' ? 'btn-primary text-xs px-3 py-2' : 'btn-secondary text-xs px-3 py-2'}>
+                Trailer (YouTube)
+              </button>
+            )}
+          </div>
+        )}
         <div className="aspect-video rounded-2xl overflow-hidden border border-white/15 bg-black grid place-items-center">
           {m._loading ? (
             <div className="flex flex-col items-center gap-3 text-gray-300">
               <Loader2 className="animate-spin" size={32} />
-              <p className="text-sm">Fetching trailer &amp; watch options…</p>
+              <p className="text-sm">Loading stream…</p>
             </div>
-          ) : free && hasEmbed ? (
+          ) : mode === 'free' ? (
             <video className="h-full w-full" src={m.streamUrl} controls autoPlay playsInline />
-          ) : embedSrc ? (
-            <iframe key={embedSrc} className="h-full w-full" src={embedSrc} title={`${m.title} trailer`} allow="accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen />
+          ) : mode === 'server' ? (
+            <iframe key={activeUrl} className="h-full w-full" src={activeUrl} title={`${m.title} — full stream`} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen />
+          ) : mode === 'trailer' ? (
+            <iframe key={activeUrl} className="h-full w-full" src={trailerSrc} title={`${m.title} trailer`} allow="accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen />
           ) : (
             <div className="text-center px-8 py-10">
-              <p className="font-bold text-lg mb-2">Trailer blocked for embedding</p>
-              <p className="text-sm text-gray-400 mb-5">The owner disabled inline playback. Open it on YouTube instead.</p>
-              {watchUrl && (<a href={watchUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 px-6 py-2.5 rounded-lg font-bold"><ExternalLink size={16} /> Watch Trailer on YouTube</a>)}
+              <p className="font-bold text-lg mb-2">Stream not available in-app</p>
+              <p className="text-sm text-gray-400 mb-5">This title has no TMDB id for the embed player. Open it on the search page instead.</p>
+              {watchUrl && (<a href={watchUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 px-6 py-2.5 rounded-lg font-bold"><ExternalLink size={16} /> Watch on YouTube</a>)}
             </div>
           )}
         </div>
-        {!m._loading && !free && watchUrl && embedSrc && (
+
+        {mode === 'server' && activeUrl && (
+          <p className="mt-2 text-xs text-gray-400">
+            Player not loading? The server may be rate-limited — switch tabs above, or{' '}
+            <a href={activeUrl} target="_blank" rel="noreferrer" className="text-red-400 underline underline-offset-2">open the player in a new tab</a>.
+          </p>
+        )}
+        {mode === 'trailer' && watchUrl && (
           <p className="mt-2 text-xs text-gray-400">Can&apos;t see it? <a href={watchUrl} target="_blank" rel="noreferrer" className="text-red-400 underline underline-offset-2">Open on YouTube</a></p>
         )}
-        {!m._loading && !free && (
+        {!m._loading && !free && (provider || watchLinks || linkServers.length > 0) && (
           <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-            {m.servers && m.servers.length > 0 && (
+            {linkServers.length > 0 && (
               <div className="mb-4">
                 <p className="font-bold text-sm mb-2">Alternative Servers</p>
                 <div className="flex flex-wrap gap-2">
-                  {m.servers.map((s) =>
-                    s.type === 'iframe' ? (
-                      <button
-                        key={s.name}
-                        onClick={() => window.open(s.url, '_blank', 'noopener,noreferrer')}
-                        className="btn-secondary text-xs px-3 py-1.5"
-                      >
-                        {s.name} ({s.quality}) — External
-                      </button>
-                    ) : (
-                      <a
-                        key={s.name}
-                        href={s.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-secondary text-xs px-3 py-1.5"
-                      >
-                        {s.name} — Search
-                      </a>
-                    )
-                  )}
+                  {linkServers.map((s) => (
+                    <a key={s.name} href={s.url} target="_blank" rel="noopener noreferrer" className="btn-secondary text-xs px-3 py-1.5">
+                      {s.name} — Search
+                    </a>
+                  ))}
                 </div>
               </div>
             )}
@@ -144,7 +174,7 @@ export function PlayerModal({ m, onClose }) {
             {watchLinks && <WatchLinks links={watchLinks} compact />}
           </div>
         )}
-        <p className="mt-3 text-xs text-gray-500">{m.notice || (free ? ('Full film from ' + (m.source || 'archive.org')) : 'Trailer only.')}</p>
+        <p className="mt-3 text-xs text-gray-500">{m.notice || (free ? ('Full film from ' + (m.source || 'archive.org')) : 'Full movie streams via VidSrc; use the Trailer tab as a fallback.')}</p>
       </div>
     </div>
   );

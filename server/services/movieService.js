@@ -1,9 +1,11 @@
 import { youtubeSearchEmbed, youtubeWatchEmbed } from './legalSources.js';
+import { buildWatchLinks } from '../data/watchProviders.js';
 
 // Normalize any catalogue entry (DB doc or seed object) into the API shape
 // the React client consumes.
 export function toClientMovie(m) {
   const doc = typeof m.toObject === 'function' ? m.toObject() : m;
+  const mediaType = doc.mediaType || 'movie';
   const streamUrl =
     doc.streamUrl ||
     (doc.trailerYouTubeKey
@@ -29,6 +31,11 @@ export function toClientMovie(m) {
     featured: !!doc.featured,
     language: doc.language || 'en',
     languageLabel: doc.languageLabel || (doc.language === 'si' ? 'Sinhala' : 'English'),
+    mediaType,
+    mediaLabel: doc.mediaLabel || (mediaType === 'tv' ? 'TV Show' : 'Movie'),
+    watchNote: doc.watchNote || null,
+    curatedProviders: doc.curatedProviders || null,
+    watchLinks: buildWatchLinks({ title: doc.title, year: doc.year, tmdbId: doc.tmdbId, mediaType }),
     trailerYouTubeKey: doc.trailerYouTubeKey || null,
     streamType: doc.streamType || 'youtube-search',
     streamUrl,
@@ -53,11 +60,12 @@ export async function fetchTmdb(path, params = {}) {
   }
 }
 
-// Fetch official YouTube trailer for a TMDB movie id.
+// Fetch official YouTube trailer for a TMDB movie/tv id.
 // Returns { key, name, url, embedUrl } or null.
-export async function getTmdbTrailer(tmdbId) {
+export async function getTmdbTrailer(tmdbId, mediaType = 'movie') {
   if (!tmdbId) return null;
-  const data = await fetchTmdb(`/movie/${tmdbId}/videos`);
+  const kind = mediaType === 'tv' ? 'tv' : 'movie';
+  const data = await fetchTmdb(`/${kind}/${tmdbId}/videos`);
   const results = data?.results || [];
   if (!results.length) return null;
   const pick =
@@ -74,11 +82,12 @@ export async function getTmdbTrailer(tmdbId) {
   };
 }
 
-// Fetch JustWatch-powered watch providers for a TMDB movie id.
+// Fetch JustWatch-powered watch providers for a TMDB movie OR tv id.
 // Returns { link, flatrate: [], rent: [], buy: [] } or null.
-export async function getTmdbProviders(tmdbId, region = 'US') {
+export async function getTmdbProviders(tmdbId, region = 'US', mediaType = 'movie') {
   if (!tmdbId) return null;
-  const data = await fetchTmdb(`/movie/${tmdbId}/watch/providers`);
+  const kind = mediaType === 'tv' ? 'tv' : 'movie';
+  const data = await fetchTmdb(`/${kind}/${tmdbId}/watch/providers`);
   if (!data?.results) return null;
   // Prefer requested region, then LK (Sri Lanka), US, GB, IN, any first.
   const order = [region, 'LK', 'US', 'GB', 'IN'];

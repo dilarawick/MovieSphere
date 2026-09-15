@@ -44,27 +44,27 @@ export default function Hero({ movies, onMore, onPlay }) {
               <ImdbBadge score={m.imdb} />
               <Meta movie={m} light />
             </div>
-            <p className="mt-4 text-gray-200/90 line-clamp-3 max-w-xl">{m.overview}</p>
-            <p className="mt-2 text-xs text-gray-400">Starring: {m.cast.join(', ')}</p>
+            <p className="mt-4 text-base md:text-lg text-gray-200/90 line-clamp-3 max-w-xl leading-relaxed">{m.overview}</p>
+            <p className="mt-2 text-sm md:text-base text-gray-400">Starring: {(m.cast || []).join(', ')}</p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <button onClick={() => onPlay(m)} className="flex items-center gap-2 rounded-lg bg-red-600 hover:bg-red-500 px-7 py-3 font-bold shadow-xl shadow-red-900/40">
-                <Play size={20} fill="currentColor" /> Watch Now
+              <button onClick={() => onPlay(m)} className="btn-primary text-lg">
+                <Play size={22} fill="currentColor" /> Watch Now
               </button>
-              <button onClick={() => onMore(m)} className="flex items-center gap-2 rounded-lg bg-white/15 hover:bg-white/25 backdrop-blur px-6 py-3 font-semibold border border-white/20">
-                <Plus size={18} /> More Info
+              <button onClick={() => onMore(m)} className="btn-secondary text-lg">
+                <Plus size={20} /> More Info
               </button>
             </div>
-            <div className="mt-5 flex gap-1.5 flex-wrap">
+            <div className="mt-5 flex gap-2 flex-wrap">
               {m.genres.map((g) => (
-                <span key={g} className="text-[11px] px-2.5 py-1 rounded-full bg-black/50 border border-white/15">{g}</span>
+                <span key={g} className="text-sm md:text-base px-3.5 py-1.5 rounded-full bg-black/50 border border-white/15">{g}</span>
               ))}
             </div>
           </div>
         </div>
       </div>
 
-      <button onClick={() => go(-1)} aria-label="Previous" className="z-40 absolute left-4 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-black/40 hover:bg-red-600 border border-white/10"><ChevronLeft /></button>
-      <button onClick={() => go(1)} aria-label="Next" className="z-40 absolute right-4 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-black/40 hover:bg-red-600 border border-white/10"><ChevronRight /></button>
+      <button onClick={() => go(-1)} aria-label="Previous" className="z-40 absolute left-4 top-1/2 -translate-y-1/2 p-4 rounded-full bg-black/50 hover:bg-red-600 border border-white/15 text-lg"><ChevronLeft size={24} /></button>
+      <button onClick={() => go(1)} aria-label="Next" className="z-40 absolute right-4 top-1/2 -translate-y-1/2 p-4 rounded-full bg-black/50 hover:bg-red-600 border border-white/15 text-lg"><ChevronRight size={24} /></button>
 
       <div className="z-40 absolute bottom-8 right-6 md:right-12 flex items-center gap-2">
         {movies.map((mv, i) => (

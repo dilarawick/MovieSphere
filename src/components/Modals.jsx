@@ -1,5 +1,6 @@
 import { X, Play, Plus, Check, Star, BadgeCheck, ExternalLink, Loader2, Tv, Clapperboard } from 'lucide-react';
 import { ImdbBadge, Meta } from './bits.jsx';
+import { PosterImg } from './Row.jsx';
 
 export function MediaBadge({ type }) {
   if (type === 'tv') {
@@ -24,7 +25,7 @@ export function DetailModal({ m, onClose, onPlay, inList, onToggle }) {
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
       <div className="relative w-full max-w-3xl bg-[#12142a] border border-white/10 rounded-t-3xl md:rounded-3xl overflow-hidden max-h-[92vh] overflow-y-auto animate-fadeUp">
         <div className="relative h-64 md:h-80">
-          <img src={m.backdrop} alt={m.title} className="h-full w-full object-cover" />
+          <PosterImg src={m.backdrop} title={m.title} className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#12142a] via-transparent to-transparent" />
           <button onClick={onClose} className="absolute top-4 right-4 p-2 rounded-full bg-black/60 hover:bg-red-600"><X size={18} /></button>
           <h2 className="absolute bottom-4 left-6 right-6 text-3xl md:text-5xl font-black drop-shadow">{m.title}</h2>
@@ -183,7 +184,7 @@ export function ListDrawer({ open, items, onClose, onMore, onRemove }) {
         <div className="space-y-3">
           {items.map((m) => (
             <div key={m.id} className="flex gap-3 bg-white/5 border border-white/10 rounded-xl p-3">
-              <img src={m.poster} alt={m.title} className="w-16 aspect-[2/3] object-cover rounded-lg" />
+              <PosterImg src={m.poster} title={m.title} className="w-16 aspect-[2/3] object-cover rounded-lg" />
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-base truncate">{m.title}</p>
                 <p className="text-sm text-gray-300">{m.year} • {m.mediaLabel || 'Movie'} • IMDb {m.imdb ? m.imdb.toFixed(1) : 'NR'}</p>

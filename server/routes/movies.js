@@ -5,10 +5,23 @@ import { ENGLISH } from '../data/seedEnglish.js';
 import { ENGLISH_MORE } from '../data/seedEnglishMore.js';
 import { PUBLIC_DOMAIN } from '../data/seedPublicDomain.js';
 import { SINHALA } from '../data/seedSinhala.js';
+import { LATEST_MOVIES } from '../data/seed2026a.js';
+import { LATEST_MORE } from '../data/seed2026b.js';
+import { LATEST_TV } from '../data/seed2026c.js';
 
 const router = express.Router();
-const memoryCatalogue = [...ENGLISH, ...ENGLISH_MORE, ...PUBLIC_DOMAIN, ...SINHALA]
-  .map((m, i) => ({ _id: `seed-${i}`, ...m }));
+function withType(list, fallback) {
+  return list.filter((m) => !m.skip).map((m) => ({ mediaType: fallback, ...m }));
+}
+const memoryCatalogue = [
+  ...withType(ENGLISH, 'movie'),
+  ...withType(ENGLISH_MORE, 'movie'),
+  ...withType(PUBLIC_DOMAIN, 'movie'),
+  ...withType(SINHALA, 'movie'),
+  ...withType(LATEST_MOVIES, 'movie'),
+  ...withType(LATEST_MORE, 'movie'),
+  ...withType(LATEST_TV, 'tv'),
+].map((m, i) => ({ _id: `seed-${i}`, ...m }));
 
 async function allMovies() {
   if (dbHasMovies()) return Movie.find().lean();
@@ -23,11 +36,12 @@ function dbHasMovies() { return _dbCount > 0; }
 
 router.get('/health', (req, res) => res.json({ ok: true }));
 
-// GET /api/movies?lang=en|si|all&q=&genre=&sort=latest|imdb|az&limit=
+// GET /api/movies?lang=en|si|all&type=movie|tv|all&q=&genre=&sort=latest|imdb|az&limit=
 router.get('/', async (req, res) => {
-  const { lang = 'all', q = '', genre = 'All', sort = 'latest', limit = 100 } = req.query;
+  const { lang = 'all', type = 'all', q = '', genre = 'All', sort = 'latest', limit = 100 } = req.query;
   let list = await allMovies();
   if (lang !== 'all') list = list.filter((m) => (m.language || 'en') === lang);
+  if (type !== 'all') list = list.filter((m) => (m.mediaType || 'movie') === type);
   if (genre !== 'All') list = list.filter((m) => (m.genres || []).includes(genre));
   if (q.trim()) {
     const needle = q.toLowerCase();
@@ -77,21 +91,21 @@ router.get('/:id', async (req, res) => {
 
 // GET /api/movies/:id/stream — legal playback descriptor
 // Full films (mp4/hls) stream directly. Everything else resolves the best
-// legal option in this order:
-//   1. Stored trailerYouTubeKey / streamUrl (seed)
-//   2. Live TMDB /movie/{id}/videos trailer via TMDB_API_KEY
-//   3. JustWatch watch-providers (rent/buy/subscription) via TMDB
-//   4. YouTube search fallback (user clicks through to a real page)
+// legal option: stored trailer, live TMDB trailer, curated + live providers,
+// deep watch-links (Netflix / Prime / Disney / Max / Apple / Hulu / JustWatch).
 router.get('/:id/stream', async (req, res) => {
   const list = await allMovies();
   const found = list.find((m) => String(m._id || m.id) === req.params.id || String(m.tmdbId) === req.params.id);
   if (!found) return res.status(404).json({ error: 'Movie not found' });
   const c = toClientMovie(found);
+  const mediaKind = c.mediaType || 'movie';
+  const tmdbBase = mediaKind === 'tv' ? 'https://www.themoviedb.org/tv' : 'https://www.themoviedb.org/movie';
   const isFullFilm = ['mp4', 'hls'].includes(c.streamType);
   if (isFullFilm) {
     return res.json({
       title: c.title,
       year: c.year,
+      mediaType: mediaKind,
       streamType: c.streamType,
       streamUrl: c.streamUrl,
       source: c.source,
@@ -99,7 +113,8 @@ router.get('/:id/stream', async (req, res) => {
       licenseUrl: c.licenseUrl,
       fullFilmFree: true,
       provider: null,
-      tmdbUrl: c.tmdbId ? `https://www.themoviedb.org/movie/${c.tmdbId}` : null,
+      watchLinks: c.watchLinks,
+      tmdbUrl: c.tmdbId ? `${tmdbBase}/${c.tmdbId}` : null,
       trailer: null,
       notice: 'Full film — public-domain or rights-holder licensed. Free & legal.',
     });
@@ -113,8 +128,8 @@ router.get('/:id/stream', async (req, res) => {
 
   if (c.tmdbId) {
     const [trailer, prov] = await Promise.all([
-      trailerKey ? null : getTmdbTrailer(c.tmdbId).catch(() => null),
-      getTmdbProviders(c.tmdbId, req.query.region || 'US').catch(() => null),
+      trailerKey ? null : getTmdbTrailer(c.tmdbId, mediaKind).catch(() => null),
+      getTmdbProviders(c.tmdbId, req.query.region || 'US', mediaKind).catch(() => null),
     ]);
     if (trailer) {
       trailerKey = trailer.key;
@@ -124,6 +139,18 @@ router.get('/:id/stream', async (req, res) => {
     providers = prov;
   }
 
+  // Merge curated offline providers with live TMDB providers (no TMDB key needed for curated).
+  const curated = found.curatedProviders || c.curatedProviders || null;
+  const merged = {
+    region: providers?.region || 'US',
+    link: providers?.link || c.watchLinks.justwatch,
+    flatrate: mergeProv(curated?.flatrate, providers?.flatrate),
+    rent: mergeProv(curated?.rent, providers?.rent),
+    buy: mergeProv(curated?.buy, providers?.buy),
+    theaters: !!(curated?.theaters),
+  };
+  const hasAny = merged.flatrate.length || merged.rent.length || merged.buy.length || merged.theaters;
+
   // Final fallback: a YouTube search page that always loads.
   const q = encodeURIComponent(`${c.title} ${c.year || ''} official trailer`.trim());
   const searchUrl = `https://www.youtube.com/results?search_query=${q}`;
@@ -131,6 +158,8 @@ router.get('/:id/stream', async (req, res) => {
   res.json({
     title: c.title,
     year: c.year,
+    mediaType: mediaKind,
+    mediaLabel: c.mediaLabel,
     streamType: trailerEmbed ? 'youtube' : 'youtube-search',
     streamUrl: trailerEmbed || null,
     streamUrlFallback: searchUrl,
@@ -138,14 +167,29 @@ router.get('/:id/stream', async (req, res) => {
     license: c.license,
     licenseUrl: c.licenseUrl,
     fullFilmFree: false,
-    provider: providers,
-    tmdbUrl: c.tmdbId ? `https://www.themoviedb.org/movie/${c.tmdbId}` : null,
+    watchNote: c.watchNote,
+    provider: hasAny ? merged : providers,
+    watchLinks: c.watchLinks,
+    tmdbUrl: c.tmdbId ? `${tmdbBase}/${c.tmdbId}` : null,
     trailer: trailerKey
       ? { key: trailerKey, embedUrl: trailerEmbed, watchUrl: trailerWatch }
       : { key: null, embedUrl: null, watchUrl: searchUrl },
-    notice: 'Trailer plays in-app. Full film is under copyright — use the provider links below to watch legally.',
+    notice: mediaKind === 'tv'
+      ? 'Trailer plays in-app. Full episodes are under copyright — use the provider links below to watch legally.'
+      : 'Trailer plays in-app. Full film is under copyright — use the provider links below to watch legally.',
   });
 });
+
+function mergeProv(a = [], b = []) {
+  const seen = new Set();
+  const out = [];
+  [...(a || []), ...(b || [])].forEach((x) => {
+    if (!x || !x.name || seen.has(x.name)) return;
+    seen.add(x.name);
+    out.push(x);
+  });
+  return out;
+}
 
 // Movie API proxy — TMDB metadata only (requires TMDB_API_KEY).
 router.get('/external/tmdb/trending', async (req, res) => {

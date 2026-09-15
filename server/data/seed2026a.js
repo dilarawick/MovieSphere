@@ -1,4 +1,6 @@
-// 2025-2026 latest MOVIES. Trailer-only + curated where-to-watch.
+// 2025-2026 latest MOVIES (speculative slate).
+// NOTE: Avengers: Doomsday + Dune: Part Three now live in seed2026real2.js
+// with full Dec 18 2026 dates — dedupe keeps the real ones.
 import { p } from './watchProviders.js';
 export const LATEST_MOVIES = [
   {
@@ -17,7 +19,7 @@ export const LATEST_MOVIES = [
     curatedProviders: { flatrate: [], rent: [], buy: [], theaters: true },
   },
   {
-    tmdbId: null, title: 'Avengers: Doomsday', year: 2026, imdb: 0,
+    tmdbId: null, title: 'Avengers: Doomsday (Early Announce)', year: 2026, imdb: 0,
     duration: '2h 50m', maturity: 'PG-13', quality: '4K',
     genres: ['Action', 'Adventure', 'Sci-Fi'],
     overview: 'The Avengers reunite against Doctor Doom in the next MCU saga film.',
@@ -32,7 +34,7 @@ export const LATEST_MOVIES = [
     curatedProviders: { flatrate: [], rent: [], buy: [], theaters: true },
   },
   {
-    tmdbId: null, title: 'Dune: Part Three', year: 2026, imdb: 0,
+    tmdbId: null, title: 'Dune: Part Three (Early Announce)', year: 2026, imdb: 0,
     duration: '2h 45m', maturity: 'PG-13', quality: '4K',
     genres: ['Sci-Fi', 'Adventure'],
     overview: 'Paul Atreides faces holy war across the universe. Finale of Villeneuve trilogy.',

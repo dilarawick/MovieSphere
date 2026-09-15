@@ -18,13 +18,15 @@ export default function Navbar({ query, setQuery, watchCount, onWatchOpen }) {
         <nav className="hidden md:flex items-center gap-6 text-sm text-gray-300 ml-6">
           <a href="#top" className="hover:text-white">Home</a>
           <a href="#trending" className="hover:text-white">Trending</a>
+          <a href="#latest" className="hover:text-white">2026 Latest</a>
+          <a href="#tv" className="hover:text-white">TV Shows</a>
           <a href="#browse" className="hover:text-white">Browse</a>
           <a href="#top-rated" className="hover:text-white">Top IMDb</a>
         </nav>
         <div className="flex-1" />
         <div className="relative hidden sm:block">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search movies..."
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search movies & TV shows..."
             className="w-56 focus:w-72 transition-all bg-white/10 border border-white/15 rounded-full pl-9 pr-4 py-2 text-sm outline-none focus:border-red-500 placeholder:text-gray-400" />
         </div>
         <button onClick={onWatchOpen} className="relative flex items-center gap-2 text-sm bg-white/10 hover:bg-white/20 border border-white/15 rounded-full px-4 py-2">

@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import { Movie } from './models/Movie.js';
-import { applyPosterFix3 } from './data/posterFix3.js';
+import { applyPosterFix4 } from './data/posterFix4.js';
 import { ENGLISH } from './data/seedEnglish.js';
 import { ENGLISH_MORE } from './data/seedEnglishMore.js';
 import { PUBLIC_DOMAIN } from './data/seedPublicDomain.js';
@@ -32,7 +32,7 @@ function dedupe(list) {
     return true;
   });
 }
-const all = applyPosterFix3(dedupe([
+const all = applyPosterFix4(dedupe([
   ...tag(ENGLISH, 'movie'),
   ...tag(ENGLISH_MORE, 'movie'),
   ...tag(PUBLIC_DOMAIN, 'movie'),
@@ -50,7 +50,7 @@ const all = applyPosterFix3(dedupe([
   ...tag(REAL2026_C, 'movie'),
   ...tag(REAL2026_D, 'movie'),
   ...tag(LATEST_TV, 'tv'),
-]);
+]));
 
 async function run() {
   const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/moviesphere';

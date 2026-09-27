@@ -4,13 +4,12 @@ import { ImdbBadge } from './bits.jsx';
 
 export function PosterImg({ src, title, className }) {
   const [err, setErr] = useState(false);
-  if (!src || err) {
+  const bad = !src || src.includes('placehold.co') || err;
+  if (bad) {
+    const label = (title || 'Poster coming soon').slice(0, 42);
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='500' height='750'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#1a1040'/><stop offset='.5' stop-color='#5b1a1a'/><stop offset='1' stop-color='#0d2b1d'/></linearGradient></defs><rect width='500' height='750' fill='url(#g)'/><text x='250' y='360' font-family='Arial' font-size='34' font-weight='bold' fill='#fff' text-anchor='middle'>${label.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</text><text x='250' y='405' font-family='Arial' font-size='20' fill='#ffffffaa' text-anchor='middle'>MovieSphere 2026</text></svg>`;
     return (
-      <div className={`flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-[#1a1040] via-[#241a2e] to-[#0d2b1d] text-center p-4 ${className || ''}`}>
-        <ImageOff size={28} className="text-white/40" />
-        <p className="font-bold text-base leading-tight line-clamp-3">{title}</p>
-        <p className="text-xs text-white/50">Poster coming soon</p>
-      </div>
+      <img src={'data:image/svg+xml;utf8,' + encodeURIComponent(svg)} alt={title} loading="lazy" className={className} />
     );
   }
   return <img src={src} alt={title} loading="lazy" onError={() => setErr(true)} className={className} />;

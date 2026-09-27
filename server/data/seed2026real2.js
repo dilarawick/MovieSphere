@@ -1,19 +1,26 @@
 // REAL 2026 movies part 2 (spring-to-fall slate).
 import { p } from './watchProviders.js';
-const BD = 'https://image.tmdb.org/t/p/original/xOMo8BRK7PfcJv9JCnx7s5hj0PX.jpg';
 const PH = (t) => 'https://placehold.co/500x750/241a08/FFF?text=' + encodeURIComponent(t);
+const WESTERN_CARD = 'https://image.tmdb.org/t/p/w500/x6rHcQFiYcczLQPrmxXPAicm54E.jpg';
+const WESTERN_BG = 'https://image.tmdb.org/t/p/original/qY7zVZ7liULhfRoXg4c9Xl83LcR.jpg';
+const genericBackdrop = 'https://image.tmdb.org/t/p/original/xOMo8BRK7PfcJv9JCnx7s5hj0PX.jpg';
 function mk(rows) {
-  return rows.map((r) => ({
-    tmdbId: r[0], title: r[1], year: 2026, imdb: r[2],
-    duration: '1h 55m', maturity: 'PG-13', quality: '4K',
-    genres: r[3], overview: r[4], cast: [r[5], r[6]], director: r[7],
-    poster: PH(r[1]), backdrop: BD, trending: !!r[8], featured: false,
-    language: 'en', languageLabel: 'English', mediaType: 'movie',
-    streamType: 'youtube-search', source: 'youtube-legal',
-    license: 'In theaters - trailer only',
-    watchNote: r[9],
-    curatedProviders: { flatrate: p(...(r[10] || [])), rent: p('prime', 'apple'), buy: p('prime', 'apple'), theaters: true },
-  }));
+  return rows.map((r) => {
+    const isHokum = r[1] === 'Hokum Carry';
+    return {
+      tmdbId: r[0], title: r[1], year: 2026, imdb: r[2],
+      duration: '1h 55m', maturity: 'PG-13', quality: '4K',
+      genres: r[3], overview: r[4], cast: [r[5], r[6]], director: r[7],
+      poster: isHokum ? WESTERN_CARD : PH(r[1]),
+      backdrop: isHokum ? WESTERN_BG : genericBackdrop,
+      trending: !!r[8], featured: false,
+      language: 'en', languageLabel: 'English', mediaType: 'movie',
+      streamType: 'youtube-search', source: 'youtube-legal',
+      license: 'In theaters - trailer only',
+      watchNote: r[9],
+      curatedProviders: { flatrate: p(...(r[10] || [])), rent: p('prime', 'apple'), buy: p('prime', 'apple'), theaters: true },
+    };
+  });
 }
 export const REAL2026_B = mk([
 [null, 'Avengers: Doomsday', 0, ['Action','Adventure','Sci-Fi'], 'Avengers face Doctor Doom. MCU Phase Six.', 'Robert Downey Jr.', 'Chris Hemsworth', 'Russo Brothers', 1, 'In theaters Dec 18 2026. Later on Disney+.', []],

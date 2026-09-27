@@ -1,39 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html { scroll-behavior: smooth; }
 body {
-  background: #08090f;
-  color: #f3f4f6;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  font-size: 17px;
-  line-height: 1.6;
+  background: #000000;
+  color: #00ff41;
+  font-family: 'Orbitron', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
 }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 .text-stroke {
-  -webkit-text-stroke: 1px rgba(255,255,255,.35);
+  -webkit-text-stroke: 1px rgba(0,255,65,.35);
   color: transparent;
 }
-.glass { background: rgba(12,14,28,.62); backdrop-filter: blur(14px); }
+.glass { background: rgba(10,10,10,.85); backdrop-filter: blur(14px); }
 .hero-gradient {
-  background: linear-gradient(90deg, rgba(8,9,15,.96) 0%, rgba(8,9,15,.82) 32%, rgba(8,9,15,.35) 62%, rgba(8,9,15,.15) 100%),
-    linear-gradient(0deg, #08090f 2%, transparent 45%, rgba(8,9,15,.4) 100%);
+  background: linear-gradient(90deg, rgba(0,0,0,.96) 0%, rgba(0,0,0,.82) 32%, rgba(0,0,0,.35) 62%, rgba(0,0,0,.15) 100%),
+    linear-gradient(0deg, #000000 2%, transparent 45%, rgba(0,0,0,.4) 100%);
 }
 .card-shine:hover .shine { opacity: 1; transform: translateX(120%) skewX(-18deg); }
 
+/* Progress bar loading animation */
+.progress-bar {
+  @apply relative h-1.5 bg-neutral-900 rounded-full overflow-hidden;
+}
+.progress-bar::before {
+  content: '';
+  @apply absolute inset-0 bg-neon rounded-full animate-progress;
+}
+.progress-bar-infinite::before {
+  @apply animate-progress-infinite;
+}
+
+/* Neon glow utilities */
+.neon-glow {
+  box-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 40px #00ff41;
+}
+.neon-glow-sm {
+  box-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41;
+}
+.neon-text {
+  text-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41;
+}
+.neon-border {
+  border-color: #00ff41;
+  box-shadow: inset 0 0 10px rgba(0,255,65,.2), 0 0 10px rgba(0,255,65,.3);
+}
+
+/* Section heading styles */
+.section-heading {
+  @apply font-black uppercase tracking-widest relative inline-flex items-center gap-2;
+}
+.section-heading::before {
+  content: '';
+  @apply w-8 h-1.5 bg-neon rounded-full;
+}
+.section-heading-bg {
+  @apply px-4 py-2 rounded-xl bg-neon/10 border border-neon/30 backdrop-blur-sm;
+}
+
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 hover:bg-red-500 active:bg-red-700 px-7 py-3.5 text-base md:text-lg font-bold shadow-xl shadow-red-900/40 transition-all hover:scale-[1.03] active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-red-400/60 min-h-[48px];
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-neon hover:bg-neon-dim active:bg-green-700 px-7 py-3.5 text-base md:text-lg font-bold text-black shadow-xl shadow-neon/40 transition-all hover:scale-[1.03] active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-neon/60 min-h-[48px];
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-white/15 hover:bg-white/25 active:bg-white/30 px-6 py-3.5 text-base md:text-lg font-semibold border border-white/25 backdrop-blur transition-all hover:scale-[1.03] active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-white/40 min-h-[48px];
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-white/5 hover:bg-white/10 active:bg-white/15 px-6 py-3.5 text-base md:text-lg font-semibold border border-white/15 backdrop-blur transition-all hover:scale-[1.03] active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-neon/40 min-h-[48px];
   }
   .btn-chip {
-    @apply inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-2.5 text-base font-semibold transition-all focus:outline-none focus-visible:ring-4 focus-visible:ring-red-400/50 min-h-[44px];
+    @apply inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-2.5 text-base font-semibold transition-all focus:outline-none focus-visible:ring-4 focus-visible:ring-neon/50 min-h-[44px];
   }
   .btn-watch {
-    @apply inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-sm md:text-base font-semibold bg-white/10 hover:bg-red-600 border border-white/20 transition-all hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-red-400/50 min-h-[44px];
+    @apply inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-sm md:text-base font-semibold bg-white/5 hover:bg-neon border border-white/10 transition-all hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-neon/50 min-h-[44px];
   }
 }

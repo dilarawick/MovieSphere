@@ -34,14 +34,14 @@ export default function Hero({ movies, onMore, onPlay }) {
               onError={() => setBroken((b) => ({ ...b, [mv.id]: true }))}
               className={`${i === index ? 'animate-kenburns' : ''} h-full w-full object-cover`}
             />
-          ) : (
+          ) : mv.poster && !String(mv.poster).includes('placehold.co') ? (
             <img
-              src={mv.poster && !String(mv.poster).includes('placehold.co') ? mv.poster : ''}
+              src={mv.poster}
               alt={mv.title}
               onError={(e) => { e.currentTarget.style.display = 'none'; }}
               className={`${i === index ? 'animate-kenburns' : ''} h-full w-full object-cover`}
             />
-          )}
+          ) : null}
           <div className="absolute inset-0 bg-gradient-to-br from-[#1a1040] via-[#3a1020] to-[#0d2b1d]" style={{ zIndex: -1 }} />
         </div>
       ))}

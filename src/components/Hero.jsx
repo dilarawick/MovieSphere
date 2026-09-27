@@ -5,6 +5,7 @@ import { ImdbBadge, Meta } from './bits.jsx';
 export default function Hero({ movies, onMore, onPlay }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [broken, setBroken] = useState({});
   const count = movies.length;
 
   const go = useCallback((d) => setIndex((i) => (i + d + count) % count), [count]);
@@ -26,7 +27,22 @@ export default function Hero({ movies, onMore, onPlay }) {
     >
       {movies.map((mv, i) => (
         <div key={mv.id} className={`absolute inset-0 transition-opacity duration-1000 ${i === index ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}>
-          <img src={mv.backdrop} alt={mv.title} className={`${i === index ? 'animate-kenburns' : ''} h-full w-full object-cover`} />
+          {!broken[mv.id] && mv.backdrop && !String(mv.backdrop).includes('placehold.co') ? (
+            <img
+              src={mv.backdrop}
+              alt={mv.title}
+              onError={() => setBroken((b) => ({ ...b, [mv.id]: true }))}
+              className={`${i === index ? 'animate-kenburns' : ''} h-full w-full object-cover`}
+            />
+          ) : (
+            <img
+              src={mv.poster && !String(mv.poster).includes('placehold.co') ? mv.poster : ''}
+              alt={mv.title}
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+              className={`${i === index ? 'animate-kenburns' : ''} h-full w-full object-cover`}
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1a1040] via-[#3a1020] to-[#0d2b1d]" style={{ zIndex: -1 }} />
         </div>
       ))}
       <div className="absolute inset-0 hero-gradient z-20" />

@@ -5,7 +5,7 @@ export default {
     extend: {
       fontFamily: {
         display: ['Orbitron', 'system-ui', 'sans-serif'],
-        body: ['Orbitron', 'system-ui', 'sans-serif'],
+        body: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         void: '#000000',

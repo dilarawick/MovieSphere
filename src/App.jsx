@@ -75,64 +75,100 @@ export default function App() {
       <Navbar query={query} setQuery={setQuery} watchCount={watchlist.length} onWatchOpen={() => setListOpen(true)} />
       {!apiOnline && (
         <div className="pt-20 px-6 max-w-7xl mx-auto">
-          <p className="flex items-center gap-2 text-xs bg-yellow-500/15 border border-yellow-500/40 text-yellow-200 rounded-xl px-4 py-2.5"><WifiOff size={14} /> API offline — run backend: cd server, npm install, npm run dev.</p>
+          <p className="flex items-center gap-2 text-xs bg-yellow-500/15 border border-yellow-500/40 text-yellow-200 rounded-xl px-4 py-2.5"><WifiOff size={14} /> API offline - run backend: cd server, npm install, npm run dev.</p>
         </div>
       )}
       <Hero movies={featured.length ? featured : movies.slice(0, 5)} onMore={setDetail} onPlay={play} />
       <main className="max-w-7xl mx-auto px-6 md:px-10 -mt-10 relative z-30 space-y-12 pb-16">
         <div className="flex flex-wrap items-center gap-2.5">
           {[{ k: 'all', l: 'All Languages' }, { k: 'en', l: 'English' }, { k: 'si', l: 'Sinhala' }].map((t) => (
-            <button key={t.k} onClick={() => setLang(t.k)} className={lang === t.k ? 'btn-chip bg-red-600 font-bold shadow-lg shadow-red-900/40' : 'btn-chip bg-white/5 border border-white/15 hover:bg-white/15'}>{t.l}</button>
+            <button key={t.k} onClick={() => setLang(t.k)} className={lang === t.k ? 'btn-chip bg-neon text-black font-bold shadow-lg shadow-neon/40' : 'btn-chip bg-white/5 border border-white/15 hover:bg-white/15'}>{t.l}</button>
           ))}
           <span className="mx-1 h-6 w-px bg-white/15" />
           {[{ k: 'all', l: 'Movies + TV' }, { k: 'movie', l: 'Movies' }, { k: 'tv', l: 'TV Shows' }].map((t) => (
-            <button key={t.k} onClick={() => setMediaType(t.k)} className={mediaType === t.k ? 'btn-chip bg-sky-600 font-bold shadow-lg shadow-sky-900/40' : 'btn-chip bg-white/5 border border-white/15 hover:bg-white/15'}>{t.l}</button>
+            <button key={t.k} onClick={() => setMediaType(t.k)} className={mediaType === t.k ? 'btn-chip bg-neon text-black font-bold shadow-lg shadow-neon/40' : 'btn-chip bg-white/5 border border-white/15 hover:bg-white/15'}>{t.l}</button>
           ))}
         </div>
         <div>
-          <div className="flex items-center gap-2 mb-3 text-emerald-400 font-bold uppercase tracking-widest text-sm"><Ghost size={17} /> Horror Night</div>
+          <div className="mb-3">
+            <h2 className="section-heading section-heading-bg text-xl md:text-2xl lg:text-3xl text-neon neon-glow-sm">
+              <Ghost size={20} /> Horror Night
+            </h2>
+          </div>
           <Row title="Horror Movies" sub="Including The End of Oak Street + 2024 hits" movies={horror} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
         </div>
         <div>
-          <div className="flex items-center gap-2 mb-3 text-yellow-300 font-bold uppercase tracking-widest text-sm"><Laugh size={17} /> Comedy & Family</div>
+          <div className="mb-3">
+            <h2 className="section-heading section-heading-bg text-xl md:text-2xl lg:text-3xl text-neon neon-glow-sm">
+              <Laugh size={20} /> Comedy & Family
+            </h2>
+          </div>
           <Row title="Laugh + Family Night" sub="Comedies, animation & feel-good picks" movies={comedyFam} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
         </div>
         <div>
-          <div className="flex items-center gap-2 mb-3 text-orange-400 font-bold uppercase tracking-widest text-sm"><Zap size={17} /> Thriller & Action</div>
+          <div className="mb-3">
+            <h2 className="section-heading section-heading-bg text-xl md:text-2xl lg:text-3xl text-neon neon-glow-sm">
+              <Zap size={20} /> Thriller & Action
+            </h2>
+          </div>
           <Row title="Thrillers" sub="Edge-of-seat suspense" movies={thriller} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
         </div>
         {freeFilms.length > 0 && (
           <div>
-            <div className="flex items-center gap-2 mb-3 text-green-400 font-bold uppercase tracking-widest text-xs"><BadgeCheck size={15} /> Free and legal full films</div>
+            <div className="mb-3">
+              <h2 className="section-heading section-heading-bg text-xl md:text-2xl lg:text-3xl text-neon neon-glow-sm">
+                <BadgeCheck size={20} /> Free and Legal Full Films
+              </h2>
+            </div>
             <Row title="Watch Full Films Free" sub="Public-domain archive.org streams" movies={freeFilms} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
           </div>
         )}
         <div id="trending">
-          <div className="flex items-center gap-2 mb-3 text-red-500 font-bold uppercase tracking-widest text-xs">
-            <Flame size={15} /> Trending Now
+          <div className="mb-3">
+            <h2 className="section-heading section-heading-bg text-xl md:text-2xl lg:text-3xl text-neon neon-glow-sm">
+              <Flame size={20} /> Trending Now
+            </h2>
           </div>
           <Row title="Trending Movies & Shows" sub="Most watched this week" movies={trending} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
         </div>
         <div id="latest">
-          <div className="flex items-center gap-2 mb-3 text-amber-400 font-bold uppercase tracking-widest text-xs"><Sparkles size={15} /> 2026 + Latest releases</div>
-          <Row title="Latest 2024 – 2026" sub="New movies & TV with where-to-watch info" movies={latest} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
+          <div className="mb-3">
+            <h2 className="section-heading section-heading-bg text-xl md:text-2xl lg:text-3xl text-neon neon-glow-sm">
+              <Sparkles size={20} /> 2026 + Latest Releases
+            </h2>
+          </div>
+          <Row title="Latest 2024 - 2026" sub="New movies & TV with where-to-watch info" movies={latest} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
         </div>
         <div id="tv">
-          <div className="flex items-center gap-2 mb-3 text-sky-400 font-bold uppercase tracking-widest text-xs"><Tv size={15} /> TV Shows</div>
+          <div className="mb-3">
+            <h2 className="section-heading section-heading-bg text-xl md:text-2xl lg:text-3xl text-neon neon-glow-sm">
+              <Tv size={20} /> TV Shows
+            </h2>
+          </div>
           <Row title="TV Shows" sub="Stream info: Netflix, Max, Disney+ & more" movies={tvShows} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
         </div>
         <div>
-          <div className="flex items-center gap-2 mb-3 text-sky-400 font-bold uppercase tracking-widest text-xs"><Clapperboard size={15} /> Sinhala Cinema</div>
+          <div className="mb-3">
+            <h2 className="section-heading section-heading-bg text-xl md:text-2xl lg:text-3xl text-neon neon-glow-sm">
+              <Clapperboard size={20} /> Sinhala Cinema
+            </h2>
+          </div>
           <Row title="Sinhala Movies" sub="Trailer / licensed embeds" movies={sinhala} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
         </div>
         <div>
-          <div className="flex items-center gap-2 mb-3 text-violet-400 font-bold uppercase tracking-widest text-xs"><Clapperboard size={15} /> English Cinema</div>
+          <div className="mb-3">
+            <h2 className="section-heading section-heading-bg text-xl md:text-2xl lg:text-3xl text-neon neon-glow-sm">
+              <Clapperboard size={20} /> English Cinema
+            </h2>
+          </div>
           <Row title="English Movies" sub="Latest plus classics" movies={english.slice(0, 12)} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
         </div>
-        <div id="browse" className="rounded-3xl border border-white/10 bg-panel/60 p-5 md:p-7">
+        <div id="browse" className="rounded-3xl border border-neon/30 bg-panel/60 p-5 md:p-7">
           <div className="flex flex-wrap items-center gap-3 justify-between">
-            <h2 className="text-2xl font-extrabold flex items-center gap-2"><LayoutGrid className="text-red-500" size={26} /> Browse by Genre</h2>
-            <select value={sort} onChange={(e) => setSort(e.target.value)} className="bg-black/50 border border-white/15 rounded-full text-base px-5 py-3 outline-none min-h-[48px]">
+            <h2 className="section-heading section-heading-bg text-xl md:text-2xl lg:text-3xl text-neon neon-glow-sm">
+              <LayoutGrid size={26} /> Browse by Genre
+            </h2>
+            <select value={sort} onChange={(e) => setSort(e.target.value)} className="bg-black/50 border border-neon/30 rounded-full text-base px-5 py-3 outline-none min-h-[48px] text-neon">
               <option value="latest">Sort: Latest</option>
               <option value="imdb">Sort: IMDb High-Low</option>
               <option value="az">Sort: A-Z</option>
@@ -140,18 +176,18 @@ export default function App() {
           </div>
           <div className="mt-4 flex gap-2.5 overflow-x-auto no-scrollbar pb-1">
             {genres.map((g) => (
-              <button key={g} onClick={() => setGenre(g)} className={genre === g ? 'shrink-0 btn-chip bg-red-600 font-bold shadow-lg shadow-red-900/40' : 'shrink-0 btn-chip bg-white/5 border border-white/15 hover:bg-white/15'}>{g}</button>
+              <button key={g} onClick={() => setGenre(g)} className={genre === g ? 'shrink-0 btn-chip bg-neon text-black font-bold shadow-lg shadow-neon/40' : 'shrink-0 btn-chip bg-white/5 border border-white/15 hover:bg-white/15'}>{g}</button>
             ))}
           </div>
-          {apiError ? (
-            <div className="py-14 text-center text-gray-400">
-              <SearchX className="mx-auto mb-3" size={32} />
-              <p>Couldn&apos;t reach the API{API_BASE ? ` at ${API_BASE}` : ' (same origin)'}.</p>
-              <p className="mt-2 text-xs font-mono text-red-300/80 break-all px-4">{apiErrorMsg}</p>
-              <p className="mt-2 text-xs">If it says NON-JSON with &lt;!doctype — frontend and API are on different services. Set VITE_API_URL to the backend URL and redeploy.</p>
+{apiError ? (
+            <div className="py-14 text-center text-neon/70">
+              <SearchX className="mx-auto mb-3 text-neon" size={32} />
+              <p>Couldn't reach the API{API_BASE ? ` at ${API_BASE}` : ' (same origin)'}.</p>
+              <p className="mt-2 text-xs font-mono text-neon/80 break-all px-4">{apiErrorMsg}</p>
+              <p className="mt-2 text-xs">If it says NON-JSON with &lt;!doctype - frontend and API are on different services. Set VITE_API_URL to the backend URL and redeploy.</p>
             </div>
           ) : movies.length === 0 ? (
-            <div className="py-14 text-center text-gray-300"><SearchX className="mx-auto mb-3" size={36} /><p className="text-lg">No titles for this filter — try “All”.</p></div>
+            <div className="py-14 text-center text-neon/70"><SearchX className="mx-auto mb-3 text-neon" size={36} /><p className="text-lg">No titles for this filter - try "All".</p></div>
           ) : (
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-6 justify-items-center">
               {movies.map((m) => (<MovieCard key={m.id} m={m} onMore={setDetail} onPlay={play} inList={inList(m)} onToggle={toggle} />))}
@@ -159,11 +195,15 @@ export default function App() {
           )}
         </div>
         <div id="top-rated">
-          <div className="flex items-center gap-2 mb-3 text-yellow-400 font-bold uppercase tracking-widest text-xs"><Trophy size={15} /> Top 10 IMDb</div>
+          <div className="mb-3">
+            <h2 className="section-heading section-heading-bg text-xl md:text-2xl lg:text-3xl text-neon neon-glow-sm">
+              <Trophy size={20} /> Top 10 IMDb
+            </h2>
+          </div>
           <Row title="Highest Rated Movies & Shows" sub="Sorted by IMDb score" movies={topRated} onMore={setDetail} onPlay={play} inList={inList} onToggle={toggle} />
         </div>
-        <footer className="pt-6 border-t border-white/10 flex flex-col md:flex-row gap-3 items-center justify-between text-sm text-gray-400">
-          <p className="flex items-center gap-2 font-bold text-white"><span className="grid place-items-center w-8 h-8 rounded-lg bg-red-600"><Clapperboard size={17} /></span>MovieSphere</p>
+        <footer className="pt-6 border-t border-neon/20 flex flex-col md:flex-row gap-3 items-center justify-between text-sm text-neon/70">
+          <p className="flex items-center gap-2 font-bold text-neon"><span className="grid place-items-center w-8 h-8 rounded-lg bg-neon text-black"><Clapperboard size={17} /></span>MovieSphere</p>
           <p>React - Express - MongoDB - TMDB metadata - archive.org public-domain streams</p>
         </footer>
       </main>

@@ -30,7 +30,7 @@ export const MOVIES = [
     overview: 'Wade Wilson suits up once again and convinces a reluctant Wolverine to help save his universe.',
     cast: ['Ryan Reynolds','Hugh Jackman','Emma Corrin'], director: 'Shawn Levy',
     poster: IMG.poster('/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg'),
-    backdrop: IMG.backdrop('/yDHYTfA3R0jFYba16jBB1ef8oIt.jpg'),
+    backdrop: IMG.backdrop('/cOoVcVQ3i1m5b2xtqKBtoTSbxC1.jpg'),
     trending: true, featured: true, tagline: 'Marvels Biggest Comeback',
   },
   {

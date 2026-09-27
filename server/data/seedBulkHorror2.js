@@ -16,13 +16,13 @@ function mk(rows) {
 }
 export const BULK_HORROR2 = mk([
 [694, 'The Shining', 1980, 8.4, ['Horror'], 'Jack Torrance descends at the Overlook. Kubrick classic.', 'Jack Nicholson', 'Stanley Kubrick', 0, 'Stream on Max. Rent on Prime Video.', ['max']],
-[423108, 'Get Out', 2017, 7.8, ['Horror','Thriller'], 'A weekend trip turns sinister. Peele Oscar winner.', 'Daniel Kaluuya', 'Jordan Peele', 0, 'Rent on Prime Video, Apple TV.', []],
+[419430, 'Get Out', 2017, 7.8, ['Horror','Thriller'], 'A weekend trip turns sinister. Peele Oscar winner.', 'Daniel Kaluuya', 'Jordan Peele', 0, 'Rent on Prime Video, Apple TV.', []],
 [496243, 'Parasite', 2019, 8.5, ['Thriller','Drama'], 'A poor family cons a rich household. Best Picture.', 'Song Kang-ho', 'Bong Joon Ho', 1, 'Stream on Max / Hulu. Rent on Prime Video.', ['max']],
 [381288, 'Split', 2016, 7.3, ['Horror','Thriller'], 'A man with 23 personalities holds three girls.', 'James McAvoy', 'M Night Shyamalan', 0, 'Rent on Prime Video, Apple TV.', []],
 [493922, 'Hereditary', 2018, 7.3, ['Horror','Drama'], 'A grieving family unravels a sinister fate.', 'Toni Collette', 'Ari Aster', 0, 'Stream on Max. Rent on Prime Video.', ['max']],
-[1085453, 'Evil Dead Rise', 2023, 6.5, ['Horror'], 'Deadites terrorize a city apartment.', 'Lily Sullivan', 'Lee Cronin', 0, 'Stream on Max. Rent on Prime Video.', ['max']],
+[713704, 'Evil Dead Rise', 2023, 6.5, ['Horror'], 'Deadites terrorize a city apartment.', 'Lily Sullivan', 'Lee Cronin', 0, 'Stream on Max. Rent on Prime Video.', ['max']],
 [1008042, 'Talk to Me', 2023, 7.1, ['Horror'], 'Teens conjure spirits with a hand.', 'Sophie Wilde', 'Danny Philippou', 0, 'Stream on Paramount+. Rent on Prime Video.', ['paramount']],
-[1049817, 'M3GAN', 2023, 6.4, ['Horror','Sci-Fi'], 'A killer AI doll bonds with a girl.', 'Allison Williams', 'Gerard Johnstone', 0, 'Stream on Peacock. Rent on Prime Video.', ['peacock']],
-[1029575, 'The Nun II', 2023, 6.7, ['Horror'], 'Sister Irene faces Valak in France.', 'Taissa Farmiga', 'Michael Chaves', 0, 'Stream on Max. Rent on Prime Video.', ['max']],
-[762441, 'A Quiet Place Part II', 2021, 7.2, ['Horror','Thriller'], 'Abbott family faces new terrors.', 'Emily Blunt', 'John Krasinski', 0, 'Stream on Paramount+. Rent on Prime Video.', ['paramount']],
+[536554, 'M3GAN', 2023, 6.4, ['Horror','Sci-Fi'], 'A killer AI doll bonds with a girl.', 'Allison Williams', 'Gerard Johnstone', 0, 'Stream on Peacock. Rent on Prime Video.', ['peacock']],
+[968051, 'The Nun II', 2023, 6.7, ['Horror'], 'Sister Irene faces Valak in France.', 'Taissa Farmiga', 'Michael Chaves', 0, 'Stream on Max. Rent on Prime Video.', ['max']],
+[520763, 'A Quiet Place Part II', 2021, 7.2, ['Horror','Thriller'], 'Abbott family faces new terrors.', 'Emily Blunt', 'John Krasinski', 0, 'Stream on Paramount+. Rent on Prime Video.', ['paramount']],
 ]);

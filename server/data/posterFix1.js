@@ -2,7 +2,7 @@
 export const POSTER_FIX = {
   'Dune: Part Two': ['1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg', 'xOMo8BRK7PfcJv9JCnx7s5hj0PX.jpg'],
   'Oppenheimer': ['8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg', 'rLb2cwF3Pazuxaj0sRXQ037tGI1.jpg'],
-  'Deadpool & Wolverine': ['8cdWjvZQUExUUTzyp4t6EDMubfO.jpg', 'yDHYTfA3R0jFYba16jBB1ef8oIt.jpg'],
+  'Deadpool & Wolverine': ['8cdWjvZQUExUUTzyp4t6EDMubfO.jpg', 'cOoVcVQ3i1m5b2xtqKBtoTSbxC1.jpg'],
   'John Wick: Chapter 4': ['vZloFAK7NmvMGKE7VkF5UHaz0I.jpg', 'h8gHn0OzBoaefsYseUByqsmEDMY.jpg'],
   'Inside Out 2': ['vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg', 'stKGOm8UyhuLPR9sZLjs5AkmncA.jpg'],
   'Top Gun: Maverick': ['62HCnUTziyWcpDaBO2i1DX17ljH.jpg', 'odJ4hx6g6vBt4lBWKFD1tI8WS4x.jpg'],

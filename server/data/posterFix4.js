@@ -179,8 +179,8 @@ export const POSTER_FIX4 = {
     "https://image.tmdb.org/t/p/original/adNMDatnEnIEo4LUo1KyhouP6VA.jpg"
   ],
   "Deadpool and Wolverine (Alt Art)": [
-    "https://image.tmdb.org/t/p/w500/vLHNpNrVnnk0GaW6AcwpCXYUxtz.jpg",
-    "https://image.tmdb.org/t/p/original/Avjr8G1vKvKbLyOTQuH44uw7xuk.jpg"
+    "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg",
+    "https://image.tmdb.org/t/p/original/cOoVcVQ3i1m5b2xtqKBtoTSbxC1.jpg"
   ],
   "Joker: Folie a Deux": [
     "https://image.tmdb.org/t/p/w500/if8QiqCI7WAGImKcJCfzp6VTyKA.jpg",
@@ -259,8 +259,8 @@ export const POSTER_FIX4 = {
     "https://image.tmdb.org/t/p/original/yxQACC8pPE5RpRU8nFVU830LL6u.jpg"
   ],
   "Hit Man": [
-    "https://image.tmdb.org/t/p/w500/m0xK4D3iPLl58ZNxVj4tpf7E5LZ.jpg",
-    "https://image.tmdb.org/t/p/original/mtvr7H9jbeNzPdY3B1AfRUkYWcF.jpg"
+    "https://image.tmdb.org/t/p/w500/oil3EZwKFp3CWxZnfGfGglesvm9.jpg",
+    "https://image.tmdb.org/t/p/original/xY5zQOFXwE9G33GJejRMNWYs8SK.jpg"
   ],
   "Civil War": [
     "https://image.tmdb.org/t/p/w500/kfdVbOzwsKy65eaizDnBfxAJ95p.jpg",
@@ -356,7 +356,7 @@ export const POSTER_FIX4 = {
   ],
   "Deadpool & Wolverine": [
     "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg",
-    "https://image.tmdb.org/t/p/original/by8z9Fe8y7p4jo2YlW2SZDnptyT.jpg"
+    "https://image.tmdb.org/t/p/original/cOoVcVQ3i1m5b2xtqKBtoTSbxC1.jpg"
   ],
   "John Wick: Chapter 4": [
     "https://image.tmdb.org/t/p/w500/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg",

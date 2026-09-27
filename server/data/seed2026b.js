@@ -17,7 +17,7 @@ export const LATEST_MORE = [
     curatedProviders: { flatrate: p('paramount', 'prime'), rent: p('prime', 'apple'), buy: p('prime', 'apple') },
   },
   {
-    tmdbId: 912495, title: 'Venom: The Last Dance', year: 2024, imdb: 6.8,
+    tmdbId: 912649, title: 'Venom: The Last Dance', year: 2024, imdb: 6.8,
     duration: '1h 49m', maturity: 'PG-13', quality: '4K',
     genres: ['Action', 'Sci-Fi', 'Adventure'],
     overview: 'Eddie and Venom go on the run.',

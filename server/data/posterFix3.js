@@ -260,8 +260,8 @@ export const POSTER_FIX3 = {
     "https://image.tmdb.org/t/p/original/yxQACC8pPE5RpRU8nFVU830LL6u.jpg"
   ],
   "Hit Man": [
-    "https://image.tmdb.org/t/p/w500/m0xK4D3iPLl58ZNxVj4tpf7E5LZ.jpg",
-    "https://image.tmdb.org/t/p/original/mtvr7H9jbeNzPdY3B1AfRUkYWcF.jpg"
+    "https://image.tmdb.org/t/p/w500/oil3EZwKFp3CWxZnfGfGglesvm9.jpg",
+    "https://image.tmdb.org/t/p/original/xY5zQOFXwE9G33GJejRMNWYs8SK.jpg"
   ],
   "Civil War": [
     "https://image.tmdb.org/t/p/w500/kfdVbOzwsKy65eaizDnBfxAJ95p.jpg",
